@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 311853531232976565}
   - component: {fileID: 311853531232976566}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: ValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,5 +298,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 311853531220679633}
-  _colorSettings: {fileID: 11400000, guid: 56253a98267f6b14eafffc2e2295f4c7, type: 2}
+  _valueTMP: {fileID: 311853531232976566}
   _value: 0

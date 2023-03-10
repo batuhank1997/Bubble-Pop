@@ -1,4 +1,6 @@
+using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Settings;
+using TMPro;
 using UnityEngine;
 
 namespace _01_Scripts.Game.Core
@@ -6,28 +8,34 @@ namespace _01_Scripts.Game.Core
     public class Item : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] private ColorSettings _colorSettings;
+        [SerializeField] private TextMeshPro _valueTMP;
         [SerializeField] private int _value;
         
-        Cell _cell;
+        private Cell _cell;
 
         private int pow = 0;
 
-        void PrepareItem()
+        public void PrepareItem()
         {
             SetValue();
             SetColor();
+            SetText();
         }
 
         void SetValue()
         {
-            pow = Random.Range(1, 11);
+            pow = Random.Range(1, 10);
             _value = (int)Mathf.Pow(2, pow);
+        }
+        
+        void SetText()
+        {
+            _valueTMP.text = _value.ToString();
         }
 
         void SetColor()
         {
-            _spriteRenderer.color = _colorSettings.itemColors[pow];
+            _spriteRenderer.color = CellManager.I.SetItemColor(pow - 1);
         }
     }
 }
