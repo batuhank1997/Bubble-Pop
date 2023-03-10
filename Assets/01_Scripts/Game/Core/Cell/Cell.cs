@@ -6,8 +6,10 @@ namespace _01_Scripts.Game.Core
 {
     public class Cell : MonoBehaviour
     {
-        [SerializeField] private Item _item;
+        [SerializeField] private Item itemPrefab;
+        public bool HasItem;
         
+        private Item _item;
         private int _x;
         private int _y;
         private bool isInFirstRow;
@@ -22,8 +24,9 @@ namespace _01_Scripts.Game.Core
             _x = x;
             _y = y;
             _board = board;
-            
+            _item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             _item.PrepareItem();
+            HasItem = true;
         }
     }
 }
