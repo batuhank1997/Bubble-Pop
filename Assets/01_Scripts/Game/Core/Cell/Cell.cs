@@ -6,18 +6,19 @@ namespace _01_Scripts.Game.Core
 {
     public class Cell : MonoBehaviour
     {
+        [SerializeField] private Item _item;
         int _x;
         int _y;
-        Board _board;
-        Item _item;
         bool isInFirstRow;
+        
+        Board _board;
 
         List<Cell> neighbors;
 
 
-        void PrepareCell()
+        public void PrepareCell()
         {
-            
+            // _item
         }
     }
 }
