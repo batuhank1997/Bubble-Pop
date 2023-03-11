@@ -11,7 +11,7 @@ namespace _01_Scripts.Game.Core
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
 
-        private const int Rows = 9;
+        private const int Rows = 8;
         public const int RowLimit = 4;
         private const int Cols = 6;
 
@@ -20,6 +20,7 @@ namespace _01_Scripts.Game.Core
         public void Init()
         {
             CreateCells();
+            PrepareCells();
         }
         
         void CreateCells()
@@ -33,8 +34,18 @@ namespace _01_Scripts.Game.Core
                     var cell = Instantiate(_cellPrefab, new Vector3(j + rowOffset, -i * 0.875f, 0), Quaternion.identity);
                     
                     Cells[j, i] = cell;
-                    cell.PrepareCell(j, i, this);
                     cell.transform.SetParent(_cellParent);
+                }
+            }
+        }
+
+        void PrepareCells()
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Cols; j++)
+                {
+                    Cells[j, i].PrepareCell(j, i, this);
                 }
             }
         }

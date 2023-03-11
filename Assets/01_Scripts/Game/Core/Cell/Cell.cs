@@ -26,7 +26,9 @@ namespace _01_Scripts.Game.Core
         {
             X = x;
             Y = y;
+            isInFirstRow = Y == 0;
             _board = board;
+            
             GetNeighbours();
             
             if (y >= Board.RowLimit)
