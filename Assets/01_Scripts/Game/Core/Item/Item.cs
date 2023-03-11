@@ -44,6 +44,8 @@ namespace _01_Scripts.Game.Core
             pow = Random.Range(1, 10);
             _value = (int)Mathf.Pow(2, pow);
         }
+
+        public int GetValue() => _value;
         
         void SetText()
         {

@@ -13,6 +13,8 @@ namespace _01_Scripts.Game.Core
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
 
+        readonly MatchFinder _matchFinder = new MatchFinder();
+
         public const int Rows = 8;
         public const int RowLimit = 4;
         public const int Cols = 6;
@@ -66,6 +68,23 @@ namespace _01_Scripts.Game.Core
             }
 
             cellRowCounter++;
+        }
+        
+        public void ExplodeMatchingCells(Cell cell)
+        {
+            var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
+            
+            if (cells.Count < 1) return;
+            
+            for (var i = 0; i < cells.Count; i++)
+            {
+                if (!cells[i].HasItem)
+                    continue;
+                
+                var explodedCell = cells[i];
+
+                explodedCell.TryExecute();
+            }
         }
 
         public Cell GetNeighbourWithDirection(Cell cell, Direction dir)

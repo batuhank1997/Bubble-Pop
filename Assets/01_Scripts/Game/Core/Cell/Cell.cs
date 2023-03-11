@@ -13,7 +13,7 @@ namespace _01_Scripts.Game.Core
         [SerializeField] private Item itemPrefab;
         public bool HasItem;
         
-        private Item _item;
+        public Item Item;
         public int X { get; private set; }
         public int Y { get; private set; }
         
@@ -21,7 +21,7 @@ namespace _01_Scripts.Game.Core
         
         private Board _board;
 
-        private List<Cell> _neighbors = new List<Cell>();
+        public List<Cell> Neighbours = new List<Cell>();
 
 
         public void PrepareCell(int x, int y, Board board)
@@ -36,8 +36,8 @@ namespace _01_Scripts.Game.Core
             if (y >= Board.RowLimit)
                 return;
             
-            _item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-            _item.PrepareItem();
+            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+            Item.PrepareItem();
             HasItem = true;
         }
 
@@ -60,18 +60,27 @@ namespace _01_Scripts.Game.Core
 
         void ResetCell()
         {
-            if (_item)
-                Destroy(_item.gameObject);
+            if (Item)
+                Destroy(Item.gameObject);
             
-            _neighbors.Clear();
+            Neighbours.Clear();
+        }
+        
+        public void TryExecute()
+        {
+            if (Item)
+            {
+                Destroy(Item.gameObject);
+                HasItem = false;
+            }
         }
 
         public void FillWithItem(Item item)
         {
-            _item = item;
+            Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero,0.2f);
+            item.transform.DOLocalMove(Vector3.zero,0.2f).OnComplete(()=> _board.ExplodeMatchingCells(this));
         }
 
         [Button]
@@ -84,12 +93,12 @@ namespace _01_Scripts.Game.Core
             var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
             var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
 
-            if (upRightCell) _neighbors.Add(upRightCell);
-            if (upLeftCell) _neighbors.Add(upLeftCell);
-            if (lowRightCell) _neighbors.Add(lowRightCell);
-            if (lowLeftCell) _neighbors.Add(lowLeftCell);
-            if (rightCell) _neighbors.Add(rightCell);
-            if (leftCell) _neighbors.Add(leftCell);
+            if (upRightCell) Neighbours.Add(upRightCell);
+            if (upLeftCell) Neighbours.Add(upLeftCell);
+            if (lowRightCell) Neighbours.Add(lowRightCell);
+            if (lowLeftCell) Neighbours.Add(lowLeftCell);
+            if (rightCell) Neighbours.Add(rightCell);
+            if (leftCell) Neighbours.Add(leftCell);
         }
     }
 }
