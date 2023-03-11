@@ -80,8 +80,22 @@ namespace _01_Scripts.Game.Core
                 HasItem = false;
             }
         }
+        
+        public void FillWithCalculatedItem(int baseNumber,int pow)
+        {
+            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+            Item.PrepareCalculatedItem(baseNumber, pow);
+            HasItem = true;
+            StartCoroutine(TryMergeAgain());
+        }
 
-        public void FillWithItem(Item item)
+        IEnumerator TryMergeAgain()
+        {
+            yield return new WaitForSeconds(0.35f);
+            _board.ExplodeMatchingCells(this);
+        }
+
+        public void FillWithRandomItem(Item item)
         {
             Item = item;
             HasItem = true;

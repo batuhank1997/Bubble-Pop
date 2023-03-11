@@ -19,7 +19,7 @@ namespace _01_Scripts.Game.Core
         
         private Cell _cell;
 
-        private int pow = 0;
+        private int _pow = 0;
         private bool _hasFilled;
 
         private void Awake()
@@ -33,6 +33,12 @@ namespace _01_Scripts.Game.Core
             SetColor();
             SetText();
         }
+        public void PrepareCalculatedItem(int baseNumber,int pow)
+        {
+            SetValue(baseNumber, pow);
+            SetColor();
+            SetText();
+        }
 
         public void SetReadyToShoot()
         {
@@ -41,8 +47,16 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            pow = Random.Range(1, 5);
-            _value = (int)Mathf.Pow(2, pow);
+            _pow = Random.Range(1, 10);
+            _value = (int)Mathf.Pow(2, _pow);
+        }
+        
+        void SetValue(int baseNumber, int pow)
+        {
+            var total = baseNumber * Mathf.Pow(2, pow - 1);
+            _pow = pow;
+            
+            _value = (int)total;
         }
 
         public int GetValue() => _value;
@@ -54,7 +68,7 @@ namespace _01_Scripts.Game.Core
 
         void SetColor()
         {
-            _spriteRenderer.color = CellManager.I.SetItemColor(pow - 1);
+            _spriteRenderer.color = CellManager.I.SetItemColor(_pow - 1);
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -84,7 +98,7 @@ namespace _01_Scripts.Game.Core
 
         void FillCell(Cell cell)
         {
-            cell.FillWithItem(this);
+            cell.FillWithRandomItem(this);
         }
 
         List<Cell> FindEmptyCells()

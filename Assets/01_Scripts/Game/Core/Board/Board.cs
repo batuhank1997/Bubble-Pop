@@ -72,18 +72,20 @@ namespace _01_Scripts.Game.Core
         {
             // var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
             var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
-            print(cells.Count);
             
             if (cells.Count < 2) return;
-            print(cells.Count);
+            
+            Cell lastCell = cells[cells.Count - 1];
+            Item lastCellItem = lastCell.Item;
             
             for (var i = 0; i < cells.Count; i++)
             {
                 var explodedCell = cells[i];
 
-                print(explodedCell.Item);
-                explodedCell.TryMerge(cells[cells.Count - 1]);
+                explodedCell.TryMerge(lastCell);
             }
+            
+            lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), cells.Count);
         }
 
         public Cell GetNeighbourWithDirection(Cell cell, Direction dir)
