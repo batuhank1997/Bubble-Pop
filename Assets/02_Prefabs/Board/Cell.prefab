@@ -14,7 +14,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -46,6 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 311853531393047423, guid: 9d12dd8fa741cf14380a6f87d667531f, type: 3}
   HasItem: 0
+  Item: {fileID: 0}
+  IsOffsetLine: 0
+  Neighbours: []
 --- !u!58 &8286142709361747685
 CircleCollider2D:
   m_ObjectHideFlags: 0

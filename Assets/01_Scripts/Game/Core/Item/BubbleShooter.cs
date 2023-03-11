@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Core;
+using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public class BubbleShooter : MonoBehaviour
     private Vector3 _shootPos = Vector3.zero;
 
     private Camera cam;
+    private bool canShoot = true;
     
     private void Start()
     {
@@ -22,7 +24,27 @@ public class BubbleShooter : MonoBehaviour
         
         LoadItemToShoot();
         LoadNextItemToShoot();
+        SetSubscriptions();
     }
+
+    #region Subscriptions
+
+    void SetSubscriptions()
+    {
+        GameManager.I.OnGameFail += OnGameFail;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.I.OnGameFail -= OnGameFail;
+    }
+
+    void OnGameFail()
+    {
+        canShoot = false;
+    }
+
+    #endregion
 
     private void Update()
     {
@@ -36,7 +58,7 @@ public class BubbleShooter : MonoBehaviour
             _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && canShoot)
         {
             Shoot();
         }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using _01_Scripts.Game.Enums;
+using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Mechanics;
 using Sirenix.OdinInspector;
 
@@ -17,7 +18,7 @@ namespace _01_Scripts.Game.Core
         public const int RowLimit = 3;
         public const int Cols = 6;
 
-        private int cellRowCounter = 1;
+        private int cellRowCounter = RowLimit;
 
         public Cell[,] Cells = new Cell[Cols, Rows];
 
@@ -64,8 +65,11 @@ namespace _01_Scripts.Game.Core
                     Cells[j, i].MoveCellDownwards();
                 }
             }
-
+            
             cellRowCounter++;
+            
+            if (cellRowCounter >= Rows)
+                GameManager.I.OnGameFail?.Invoke();
         }
         
         public bool TryMergeMatchingCells(Cell cell)

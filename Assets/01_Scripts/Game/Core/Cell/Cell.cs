@@ -24,6 +24,8 @@ namespace _01_Scripts.Game.Core
 
         public List<Cell> Neighbours = new List<Cell>();
 
+        private Cell downLeftNeighbour;
+        private Cell downRightNeighbour;
 
         public void PrepareCell(int x, int y, Board board)
         {
@@ -53,11 +55,22 @@ namespace _01_Scripts.Game.Core
                 ResetCell();
                 transform.DOMoveY(0, 0f);
                 PrepareCell(X, 0, _board);
+                return;
             }
-            else
+            
+            if (Y == Board.Rows - 1)
             {
-                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
+                Neighbours.Remove(downLeftNeighbour);
+                Neighbours.Remove(downRightNeighbour);
             }
+            else if (Y == 1)
+            {
+                /*Neighbours.Add(_board.Cells[X, Y + 1]);
+                Neighbours.Add(_board.Cells[X + 1, Y + 1]);*/
+            }
+            
+            transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
+
         }
 
         void ResetCell()
@@ -126,6 +139,9 @@ namespace _01_Scripts.Game.Core
             var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft);
             var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
             var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
+            
+            downLeftNeighbour = lowLeftCell;
+            downRightNeighbour = lowRightCell;
 
             if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);
             if (upLeftCell && !Neighbours.Contains(upLeftCell)) Neighbours.Add(upLeftCell);
