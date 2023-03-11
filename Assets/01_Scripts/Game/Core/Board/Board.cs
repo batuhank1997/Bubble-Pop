@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,8 @@ namespace _01_Scripts.Game.Core
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
 
-        private const int Rows = 4;
+        private const int Rows = 9;
+        public const int RowLimit = 4;
         private const int Cols = 6;
 
         public Cell[,] Cells = new Cell[Cols, Rows];
@@ -37,9 +39,25 @@ namespace _01_Scripts.Game.Core
             }
         }
 
-        Cell GetNeighbourWithDirection(Cell cell, Direction dir)
+        public Cell GetNeighbourWithDirection(Cell cell, Direction dir)
         {
-            return new Cell();
+            switch (dir)
+            {
+                case Direction.UpRight:
+                    return (cell.Y > 0 && cell.X + 1 < Cols) ? Cells[cell.X + 1, cell.Y - 1] : null;
+                case Direction.UpLeft:
+                    return cell.Y > 0 ? Cells[cell.X, cell.Y - 1] : null;
+                case Direction.DownRight:
+                    return ((cell.Y + 1) < Rows && cell.X + 1 < Cols) ? Cells[cell.X + 1, cell.Y + 1] : null;
+                case Direction.DownLeft:
+                    return cell.Y + 1 < Rows ? Cells[cell.X, cell.Y + 1] : null;
+                case Direction.Right:
+                    return cell.X + 1 < Cols ? Cells[cell.X + 1, cell.Y] : null;
+                case Direction.Left:
+                    return cell.X > 0 ? Cells[cell.X - 1, cell.Y] : null;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }
         }
     }
 }
