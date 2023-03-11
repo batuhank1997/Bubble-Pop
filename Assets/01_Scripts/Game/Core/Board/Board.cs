@@ -91,11 +91,11 @@ namespace _01_Scripts.Game.Core
             switch (dir)
             {
                 case Direction.UpRight:
-                    return (cell.Y > 0 && cell.X + 1 < Cols) ? Cells[cell.X + ( cell.IsOffsetLine ? 1 : 0), cell.Y - 1] : null;
+                    return (cell.Y > 0 && cell.X < Cols) ? Cells[cell.X + ((cell.IsOffsetLine && cell.X + 1 < Cols) ? 1 : 0), cell.Y - 1] : null;
                 case Direction.UpLeft:
                     return cell.Y > 0 ? Cells[cell.X + ((!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y - 1] : null;
                 case Direction.DownRight:
-                    return ((cell.Y + 1) < Rows && cell.X + 1 < Cols) ? Cells[cell.X + ( cell.IsOffsetLine ? 1 : 0), cell.Y + 1] : null;
+                    return ((cell.Y + 1) < Rows && cell.X < Cols) ? Cells[cell.X + ((cell.IsOffsetLine && cell.X + 1 < Cols) ? 1 : 0), cell.Y + 1] : null;
                 case Direction.DownLeft:
                     return (cell.Y + 1 < Rows) ? Cells[cell.X + ( (!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y + 1] : null;
                 case Direction.Right:

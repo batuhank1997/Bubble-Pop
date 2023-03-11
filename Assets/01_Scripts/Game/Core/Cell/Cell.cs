@@ -33,7 +33,7 @@ namespace _01_Scripts.Game.Core
             isInFirstRow = Y == 0;
             _board = board;
             
-            GetNeighbours();
+            AddNeighbours();
             
             if (y >= Board.RowLimit)
                 return;
@@ -101,7 +101,7 @@ namespace _01_Scripts.Game.Core
             }
         }
         
-        void GetNeighbours()
+        void AddNeighbours()
         {
             var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight);
             var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft);
@@ -110,12 +110,12 @@ namespace _01_Scripts.Game.Core
             var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
             var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
 
-            if (upRightCell) Neighbours.Add(upRightCell);
-            if (upLeftCell) Neighbours.Add(upLeftCell);
-            if (lowRightCell) Neighbours.Add(lowRightCell);
-            if (lowLeftCell) Neighbours.Add(lowLeftCell);
-            if (rightCell) Neighbours.Add(rightCell);
-            if (leftCell) Neighbours.Add(leftCell);
+            if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);
+            if (upLeftCell && !Neighbours.Contains(upLeftCell)) Neighbours.Add(upLeftCell);
+            if (lowRightCell && !Neighbours.Contains(lowRightCell)) Neighbours.Add(lowRightCell);
+            if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
+            if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
+            if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
         }
     }
 }
