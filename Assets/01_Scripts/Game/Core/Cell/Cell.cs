@@ -76,7 +76,7 @@ namespace _01_Scripts.Game.Core
                 Item = null;
                 
                 temp.transform.SetParent(cell.transform);
-                temp.transform.DOLocalMove(Vector3.zero, 0.35f).OnComplete(() => Destroy(temp.gameObject));
+                temp.transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(() => Destroy(temp.gameObject));
                 HasItem = false;
             }
         }
@@ -91,7 +91,7 @@ namespace _01_Scripts.Game.Core
 
         IEnumerator TryMergeAgain()
         {
-            yield return new WaitForSeconds(0.35f);
+            yield return new WaitForSeconds(0.25f);
             _board.ExplodeMatchingCells(this);
         }
 

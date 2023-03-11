@@ -8,6 +8,7 @@ using UnityEngine;
 public class BubbleShooter : MonoBehaviour
 {
     [SerializeField] private Item itemPrefab;
+    [SerializeField] private float shootSpeed;
 
     private Item _itemToShoot;
     private Item _nextItemToShoot;
@@ -47,7 +48,7 @@ public class BubbleShooter : MonoBehaviour
         Transform bubble = _itemToShoot.transform;
         var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
         
-        bubble.DOMove(dir, 0.1f).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+        bubble.DOMove(dir, shootSpeed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
 
         ReloadShooter();
     }
