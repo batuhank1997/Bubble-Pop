@@ -10,10 +10,10 @@ namespace _01_Scripts.Game.Core
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
 
-        private const int Rows = 6;
-        private const int Cols = 4;
+        private const int Rows = 4;
+        private const int Cols = 6;
 
-        public Cell[,] Cells = new Cell[Rows, Cols];
+        public Cell[,] Cells = new Cell[Cols, Rows];
 
         public void Init()
         {
@@ -22,9 +22,9 @@ namespace _01_Scripts.Game.Core
         
         void CreateCells()
         {
-            for (int i = 0; i < Cols; i++)
+            for (int i = 0; i < Rows; i++)
             {
-                for (int j = 0; j < Rows; j++)
+                for (int j = 0; j < Cols; j++)
                 {
                     var rowOffset = i % 2 == 0 ? 0 : 0.5f;
                     
