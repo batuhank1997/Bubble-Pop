@@ -303,6 +303,7 @@ MonoBehaviour:
   _valueTMP: {fileID: 311853531232976566}
   _col: {fileID: -6253350636348634312}
   _value: 0
+  SpriteColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!50 &6439346303780846453
 Rigidbody2D:
   serializedVersion: 4

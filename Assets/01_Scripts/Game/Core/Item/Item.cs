@@ -29,6 +29,17 @@ namespace _01_Scripts.Game.Core
             _col.enabled = false;
         }
 
+        private void Start()
+        {
+            DoFirstScale();
+        }
+
+        void DoFirstScale()
+        {
+            transform.localScale = Vector3.zero;
+            DOVirtual.DelayedCall(Random.Range(0f, 0.25f),()=>transform.DOScale(1, 0.2f));
+        }
+
         public void PrepareItem()
         {
             SetValue();
@@ -49,7 +60,7 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            _pow = Random.Range(1, 10);
+            _pow = Random.Range(1, 6);
             _value = (int)Mathf.Pow(2, _pow);
         }
         
