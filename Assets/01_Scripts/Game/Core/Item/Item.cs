@@ -41,7 +41,7 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            pow = Random.Range(1, 10);
+            pow = Random.Range(1, 5);
             _value = (int)Mathf.Pow(2, pow);
         }
 

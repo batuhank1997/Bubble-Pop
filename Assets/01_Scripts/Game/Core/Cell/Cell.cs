@@ -18,6 +18,7 @@ namespace _01_Scripts.Game.Core
         public int Y { get; private set; }
         
         private bool isInFirstRow;
+        public bool IsOffsetLine;
         
         private Board _board;
 
@@ -28,6 +29,7 @@ namespace _01_Scripts.Game.Core
         {
             X = x;
             Y = y;
+            IsOffsetLine = Y % 2 != 0;
             isInFirstRow = Y == 0;
             _board = board;
             
@@ -66,11 +68,15 @@ namespace _01_Scripts.Game.Core
             Neighbours.Clear();
         }
         
-        public void TryExecute()
+        public void TryMerge(Cell cell)
         {
             if (Item)
             {
-                Destroy(Item.gameObject);
+                var temp = Item;
+                Item = null;
+                
+                temp.transform.SetParent(cell.transform);
+                temp.transform.DOLocalMove(Vector3.zero, 0.35f).OnComplete(() => Destroy(temp.gameObject));
                 HasItem = false;
             }
         }
@@ -84,6 +90,17 @@ namespace _01_Scripts.Game.Core
         }
 
         [Button]
+        void HighLightNeigbours()
+        {
+            foreach (var n in Neighbours)
+            {
+                if (!DOTween.IsTweening(n.transform))
+                {
+                    n.transform.DOPunchScale(Vector3.one, 0.25f);
+                }
+            }
+        }
+        
         void GetNeighbours()
         {
             var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight);

@@ -1,11 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Core;
-using UnityEngine;
 
-public class MatchFinder
+namespace _01_Scripts.Game.Mechanics
 {
-    private readonly bool[,] _visitedCells = new bool[Board.Rows, Board.Cols];
+	public class MatchFinder
+	{
+		private readonly bool[,] _visitedCells = new bool[Board.Cols, Board.Rows];
 		
 		/// <summary>
 		/// Returns the list of matching cells according to the given match type.
@@ -26,6 +26,7 @@ public class MatchFinder
 			
 			var x = cell.X;
 			var y = cell.Y;
+			
 			if (_visitedCells[x, y]) return;
 
 			if ((cell.HasItem && cell.Item.GetValue() == value))
@@ -46,12 +47,14 @@ public class MatchFinder
 
 		public void ClearVisitedCells()
 		{
-			for (var x = 0; x < _visitedCells.GetLength(0); x++)
+			for (var i = 0; i < Board.Rows; i++)
 			{
-				for (var y = 0; y < _visitedCells.GetLength(1); y++)
+				for (var j = 0; j < Board.Cols; j++)
 				{
-					_visitedCells[x, y] = false;
+					_visitedCells[j, i] = false;
 				}
 			}
 		}
+	}
 }
+

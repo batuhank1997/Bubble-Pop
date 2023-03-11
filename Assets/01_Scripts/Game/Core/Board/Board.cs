@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using _01_Scripts.Game.Enums;
-using DG.Tweening;
+using _01_Scripts.Game.Mechanics;
 using Sirenix.OdinInspector;
 
 namespace _01_Scripts.Game.Core
@@ -72,18 +70,19 @@ namespace _01_Scripts.Game.Core
         
         public void ExplodeMatchingCells(Cell cell)
         {
+            // var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
             var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
+            print(cells.Count);
             
-            if (cells.Count < 1) return;
+            if (cells.Count < 2) return;
+            print(cells.Count);
             
             for (var i = 0; i < cells.Count; i++)
             {
-                if (!cells[i].HasItem)
-                    continue;
-                
                 var explodedCell = cells[i];
 
-                explodedCell.TryExecute();
+                print(explodedCell.Item);
+                explodedCell.TryMerge(cells[cells.Count - 1]);
             }
         }
 
@@ -92,13 +91,13 @@ namespace _01_Scripts.Game.Core
             switch (dir)
             {
                 case Direction.UpRight:
-                    return (cell.Y > 0 && cell.X + 1 < Cols) ? Cells[cell.X + 1, cell.Y - 1] : null;
+                    return (cell.Y > 0 && cell.X + 1 < Cols) ? Cells[cell.X + ( cell.IsOffsetLine ? 1 : 0), cell.Y - 1] : null;
                 case Direction.UpLeft:
-                    return cell.Y > 0 ? Cells[cell.X, cell.Y - 1] : null;
+                    return cell.Y > 0 ? Cells[cell.X + ((!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y - 1] : null;
                 case Direction.DownRight:
-                    return ((cell.Y + 1) < Rows && cell.X + 1 < Cols) ? Cells[cell.X + 1, cell.Y + 1] : null;
+                    return ((cell.Y + 1) < Rows && cell.X + 1 < Cols) ? Cells[cell.X + ( cell.IsOffsetLine ? 1 : 0), cell.Y + 1] : null;
                 case Direction.DownLeft:
-                    return cell.Y + 1 < Rows ? Cells[cell.X, cell.Y + 1] : null;
+                    return (cell.Y + 1 < Rows) ? Cells[cell.X + ( (!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y + 1] : null;
                 case Direction.Right:
                     return cell.X + 1 < Cols ? Cells[cell.X + 1, cell.Y] : null;
                 case Direction.Left:
