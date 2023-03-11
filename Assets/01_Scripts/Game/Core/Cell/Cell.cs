@@ -86,7 +86,7 @@ namespace _01_Scripts.Game.Core
             Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             Item.PrepareCalculatedItem(baseNumber, pow);
             HasItem = true;
-            ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity);
+            ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity, Item.SpriteColor);
             StartCoroutine(TryMergeAgain());
         }
 

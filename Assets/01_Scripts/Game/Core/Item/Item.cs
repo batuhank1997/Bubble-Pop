@@ -22,6 +22,8 @@ namespace _01_Scripts.Game.Core
         private int _pow = 0;
         private bool _hasFilled;
 
+        public Color SpriteColor;
+        
         private void Awake()
         {
             _col.enabled = false;
@@ -69,6 +71,7 @@ namespace _01_Scripts.Game.Core
         void SetColor()
         {
             _spriteRenderer.color = CellManager.I.SetItemColor(_pow - 1);
+            SpriteColor = _spriteRenderer.color;
         }
 
         private void OnTriggerEnter2D(Collider2D col)
