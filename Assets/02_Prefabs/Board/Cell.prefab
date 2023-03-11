@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 311853531393047423, guid: 9d12dd8fa741cf14380a6f87d667531f, type: 3}
+  HasItem: 0
 --- !u!58 &8286142709361747685
 CircleCollider2D:
   m_ObjectHideFlags: 0

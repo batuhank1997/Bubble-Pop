@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Enums;
@@ -64,7 +65,15 @@ namespace _01_Scripts.Game.Core
             
             _neighbors.Clear();
         }
-        
+
+        public void FillWithItem(Item item)
+        {
+            _item = item;
+            HasItem = true;
+            item.transform.SetParent(transform);
+            item.transform.DOLocalMove(Vector3.zero,0.2f);
+        }
+
         [Button]
         void GetNeighbours()
         {

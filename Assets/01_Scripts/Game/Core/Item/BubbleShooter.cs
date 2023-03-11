@@ -43,6 +43,7 @@ public class BubbleShooter : MonoBehaviour
 
     void Shoot()
     {
+        _itemToShoot.SetReadyToShoot();
         Transform bubble = _itemToShoot.transform;
         var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
         
