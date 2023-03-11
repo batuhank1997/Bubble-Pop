@@ -14,7 +14,7 @@ namespace _01_Scripts.Game.Core
         readonly MatchFinder _matchFinder = new MatchFinder();
 
         public const int Rows = 8;
-        public const int RowLimit = 4;
+        public const int RowLimit = 3;
         public const int Cols = 6;
 
         private int cellRowCounter = 1;
@@ -68,24 +68,25 @@ namespace _01_Scripts.Game.Core
             cellRowCounter++;
         }
         
-        public void ExplodeMatchingCells(Cell cell)
+        public bool TryMergeMatchingCells(Cell cell)
         {
-            // var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
             var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
             
-            if (cells.Count < 2) return;
+            if (cells.Count < 2) return false;
             
             Cell lastCell = cells[cells.Count - 1];
             Item lastCellItem = lastCell.Item;
             
             for (var i = 0; i < cells.Count; i++)
             {
-                var explodedCell = cells[i];
+                var mergeableCell = cells[i];
 
-                explodedCell.TryMerge(lastCell);
+                mergeableCell.Merge(lastCell);
             }
             
             lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), cells.Count);
+
+            return true;
         }
 
         public Cell GetNeighbourWithDirection(Cell cell, Direction dir)

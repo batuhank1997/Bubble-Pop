@@ -68,7 +68,7 @@ namespace _01_Scripts.Game.Core
             Neighbours.Clear();
         }
         
-        public void TryMerge(Cell cell)
+        public void Merge(Cell cell)
         {
             if (Item)
             {
@@ -93,7 +93,9 @@ namespace _01_Scripts.Game.Core
         IEnumerator TryMergeAgain()
         {
             yield return new WaitForSeconds(0.25f);
-            _board.ExplodeMatchingCells(this);
+            
+            if (!_board.TryMergeMatchingCells(this))
+                _board.GetAllCellsDown();
         }
 
         public void FillWithRandomItem(Item item)
@@ -101,7 +103,7 @@ namespace _01_Scripts.Game.Core
             Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero,0.2f).OnComplete(()=> _board.ExplodeMatchingCells(this));
+            item.transform.DOLocalMove(Vector3.zero,0.2f).OnComplete(()=> _board.TryMergeMatchingCells(this));
         }
 
         [Button]
