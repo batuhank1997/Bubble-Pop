@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Enums;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -37,6 +38,31 @@ namespace _01_Scripts.Game.Core
             _item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             _item.PrepareItem();
             HasItem = true;
+        }
+
+        public void MoveCellDownwards()
+        {
+            Y++;
+            isInFirstRow = false;
+
+            if (Y == Board.Rows)
+            {
+                ResetCell();
+                transform.DOMoveY(0, 0f);
+                PrepareCell(X, 0, _board);
+            }
+            else
+            {
+                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
+            }
+        }
+
+        void ResetCell()
+        {
+            if (_item)
+                Destroy(_item.gameObject);
+            
+            _neighbors.Clear();
         }
         
         [Button]

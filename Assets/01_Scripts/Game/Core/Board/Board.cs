@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using _01_Scripts.Game.Enums;
+using DG.Tweening;
+using Sirenix.OdinInspector;
 
 namespace _01_Scripts.Game.Core
 {
@@ -11,9 +13,11 @@ namespace _01_Scripts.Game.Core
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
 
-        private const int Rows = 8;
+        public const int Rows = 8;
         public const int RowLimit = 4;
-        private const int Cols = 6;
+        public const int Cols = 6;
+
+        private int cellRowCounter = 1;
 
         public Cell[,] Cells = new Cell[Cols, Rows];
 
@@ -48,6 +52,20 @@ namespace _01_Scripts.Game.Core
                     Cells[j, i].PrepareCell(j, i, this);
                 }
             }
+        }
+
+        [Button]
+        public void GetAllCellsDown()
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Cols; j++)
+                {
+                    Cells[j, i].MoveCellDownwards();
+                }
+            }
+
+            cellRowCounter++;
         }
 
         public Cell GetNeighbourWithDirection(Cell cell, Direction dir)
