@@ -95,7 +95,7 @@ namespace _01_Scripts.Game.Core
 
         public Cell GetNeighbourWithDirection(Cell cell, Direction dir)
         {
-            switch (dir)
+            /*switch (dir)
             {
                 case Direction.UpRight:
                     return (cell.Y > 0 && cell.X < Cols) ? Cells[cell.X + ((cell.IsOffsetLine && cell.X + 1 < Cols) ? 1 : 0), cell.Y - 1] : null;
@@ -109,6 +109,89 @@ namespace _01_Scripts.Game.Core
                     return cell.X + 1 < Cols ? Cells[cell.X + 1, cell.Y] : null;
                 case Direction.Left:
                     return cell.X > 0 ? Cells[cell.X - 1, cell.Y] : null;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }*/
+            
+            switch (dir)
+            {
+                case Direction.UpRight:
+                    
+                    if (cell.IsOffsetLine)
+                    {
+                        if (cell.Y > 0 && cell.X < Cols - 1)
+                        {
+                            return Cells[cell.X + 1, cell.Y - 1];
+                        }
+                    }
+                    else if (cell.Y > 0 && cell.X < Cols - 1)
+                    {
+                        return Cells[cell.X, cell.Y - 1];
+                    }
+
+                    return null;
+                case Direction.UpLeft:
+                    
+                    if (cell.IsOffsetLine)
+                    {
+                        if (cell.Y > 0 && cell.X < Cols)
+                        {
+                            return Cells[cell.X, cell.Y - 1];
+                        }
+                    }
+                    else if (cell.Y > 0 && cell.X > 0)
+                    {
+                        return Cells[cell.X - 1, cell.Y - 1];
+                    }
+
+                    return null;
+                
+                case Direction.DownRight:
+                    
+                    if (cell.IsOffsetLine)
+                    {
+                        if (cell.Y < Rows - 1 && cell.X < Cols - 1)
+                        {
+                            return Cells[cell.X + 1, cell.Y + 1];
+                        }
+                    }
+                    else if (cell.Y < Rows - 1 && cell.X < Cols)
+                    {
+                        return Cells[cell.X, cell.Y + 1];
+                    }
+                    
+                    return null;
+                case Direction.DownLeft:
+                    
+                    if (cell.IsOffsetLine)
+                    {
+                        if (cell.Y < Rows - 1)
+                        {
+                            return Cells[cell.X, cell.Y + 1];
+                        }
+                    }
+                    else if (cell.Y < Rows - 1 && cell.X > 0)
+                    {
+                        return Cells[cell.X - 1, cell.Y + 1];
+                    }
+                    
+                    return null;
+                case Direction.Right:
+                    
+                    if (cell.X < Cols - 1)
+                    {
+                        return Cells[cell.X + 1, cell.Y];
+                    }
+                    
+                    return null;
+                case Direction.Left:
+                    
+                    if (cell.X > 0)
+                    {
+                        return Cells[cell.X - 1, cell.Y];
+                    }
+                    
+                    return null;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
