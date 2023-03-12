@@ -49,6 +49,12 @@ namespace _01_Scripts.Game.Core
         public void MoveCellDownwards()
         {
             Y++;
+
+            if (Y + 1 == Board.Rows)
+            {
+                Neighbours.Remove(downLeftNeighbour);
+                Neighbours.Remove(downRightNeighbour);
+            }
             
             if (Y == Board.Rows)
             {
