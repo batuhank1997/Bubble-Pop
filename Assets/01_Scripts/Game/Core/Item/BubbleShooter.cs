@@ -31,12 +31,12 @@ public class BubbleShooter : MonoBehaviour
 
     void SetSubscriptions()
     {
-        GameManager.I.OnGameFail += OnGameFail;
+        GameManager.OnGameFail += OnGameFail;
     }
 
     private void OnDestroy()
     {
-        GameManager.I.OnGameFail -= OnGameFail;
+        GameManager.OnGameFail -= OnGameFail;
     }
 
     void OnGameFail()

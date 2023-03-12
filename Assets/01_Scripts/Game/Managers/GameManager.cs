@@ -11,7 +11,7 @@ namespace _01_Scripts.Game.Managers
     {
         [SerializeField] private Board _board;
 
-        public Action OnGameFail;
+        public static Action OnGameFail;
 
         private void Start()
         {

@@ -14,8 +14,9 @@ namespace _01_Scripts.Game.Core
         public bool HasItem;
         
         public Item Item;
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        
+        public int X;
+        public int Y;
         
         private bool isInFirstRow;
         public bool IsOffsetLine;
@@ -27,11 +28,11 @@ namespace _01_Scripts.Game.Core
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
 
-        public void PrepareCell(int x, int y, Board board)
+        public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
             X = x;
             Y = y;
-            IsOffsetLine = Y % 2 != 0;
+            IsOffsetLine = hasOffset;
             isInFirstRow = Y == 0;
             _board = board;
             
@@ -48,29 +49,37 @@ namespace _01_Scripts.Game.Core
         public void MoveCellDownwards()
         {
             Y++;
-            isInFirstRow = false;
-
+            
             if (Y == Board.Rows)
             {
                 ResetCell();
+                Y = 0;
                 transform.DOMoveY(0, 0f);
-                PrepareCell(X, 0, _board);
-                return;
+                AddNeighbours();
+                Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+                Item.PrepareItem();
+                HasItem = true;
+            }
+            else
+            {
+                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
             }
             
-            if (Y == Board.Rows - 1)
+            /*if (Y + 1 != Board.Rows)
             {
-                Neighbours.Remove(downLeftNeighbour);
-                Neighbours.Remove(downRightNeighbour);
+                Y++;
+                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
             }
-            else if (Y == 1)
+            else
             {
-                /*Neighbours.Add(_board.Cells[X, Y + 1]);
-                Neighbours.Add(_board.Cells[X + 1, Y + 1]);*/
-            }
-            
-            transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
-
+                ResetCell();
+                Y = 0;
+                transform.DOMoveY(0, 0f);
+                AddNeighbours();
+                Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+                Item.PrepareItem();
+                HasItem = true;
+            }*/
         }
 
         void ResetCell()
@@ -78,6 +87,7 @@ namespace _01_Scripts.Game.Core
             if (Item)
                 Destroy(Item.gameObject);
             
+            DOTween.Kill(transform);
             Neighbours.Clear();
         }
         
@@ -131,14 +141,15 @@ namespace _01_Scripts.Game.Core
             }
         }
         
+        [Button]
         void AddNeighbours()
         {
-            var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight);
-            var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft);
-            var lowRightCell = _board.GetNeighbourWithDirection(this, Direction.DownRight);
-            var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft);
-            var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
-            var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
+            var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight, IsOffsetLine);
+            var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft, IsOffsetLine);
+            var lowRightCell = _board.GetNeighbourWithDirection(this, Direction.DownRight, IsOffsetLine);
+            var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft, IsOffsetLine);
+            var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right, IsOffsetLine);
+            var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left, IsOffsetLine);
             
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
