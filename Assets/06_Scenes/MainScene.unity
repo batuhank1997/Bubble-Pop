@@ -567,7 +567,6 @@ GameObject:
   - component: {fileID: 1468435236}
   - component: {fileID: 1468435237}
   - component: {fileID: 1468435238}
-  - component: {fileID: 1468435240}
   m_Layer: 0
   m_Name: ------MANAGERS------
   m_TagString: Untagged
@@ -629,17 +628,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSettings: {fileID: 11400000, guid: 3a1ffb97d8a443645a352cd904435f69, type: 2}
---- !u!114 &1468435240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468435234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afa5e382dde744918434d7d8e50f14ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mainCamAnimator: {fileID: 963194229}
-  MainCam: {fileID: 0}

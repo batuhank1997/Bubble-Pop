@@ -24,27 +24,7 @@ public class BubbleShooter : MonoBehaviour
         
         LoadItemToShoot();
         LoadNextItemToShoot();
-        SetSubscriptions();
     }
-
-    #region Subscriptions
-
-    void SetSubscriptions()
-    {
-        EventManager.OnGameFail += OnGameFail;
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.OnGameFail -= OnGameFail;
-    }
-
-    void OnGameFail()
-    {
-        canShoot = false;
-    }
-
-    #endregion
 
     private void Update()
     {

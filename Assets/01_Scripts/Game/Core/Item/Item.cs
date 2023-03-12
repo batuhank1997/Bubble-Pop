@@ -63,7 +63,7 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            _pow = Random.Range(1, 10);
+            _pow = Random.Range(5, 10);
             _value = (int)Mathf.Pow(2, _pow);
         }
         
@@ -124,12 +124,11 @@ namespace _01_Scripts.Game.Core
 
         public void Explode()
         {
-            if (DOTween.IsTweening(transform))
-            {
-                return;
-            }
+            DOTween.Kill(transform);
+            
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 SpriteColor);
+            
             Destroy(gameObject);
         }
 

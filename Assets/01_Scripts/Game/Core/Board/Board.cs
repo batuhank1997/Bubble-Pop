@@ -25,28 +25,7 @@ namespace _01_Scripts.Game.Core
         {
             CreateCells();
             PrepareCells();
-
-            Subscribe();
         }
-
-        #region Subscriptions
-
-        private void Subscribe()
-        {
-            EventManager.On2048Explode += On2048Explode;
-        }
-        
-        private void Unsubscribe()
-        {
-            EventManager.On2048Explode -= On2048Explode;
-        }
-        
-        private void On2048Explode()
-        {
-            GetAllCellsDown();
-        }
-
-        #endregion
 
         void CreateCells()
         {
@@ -143,11 +122,6 @@ namespace _01_Scripts.Game.Core
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
-        }
-
-        private void OnDestroy()
-        {
-            Unsubscribe();
         }
     }
 }

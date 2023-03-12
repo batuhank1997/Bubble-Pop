@@ -28,32 +28,7 @@ namespace _01_Scripts.Game.Core
 
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
-
-        private void Start()
-        {
-            Subscribe();
-        }
-
-        #region Subscriptions
-
-        private void Subscribe()
-        {
-            EventManager.On2048Explode += On2048Explode;
-        }
         
-        private void Unsubscribe()
-        {
-            EventManager.On2048Explode -= On2048Explode;
-        }
-        
-        private void On2048Explode()
-        {
-            ExplodeCell();
-        }
-
-        #endregion
-        
-
         public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
             X = x;
@@ -131,15 +106,15 @@ namespace _01_Scripts.Game.Core
         [Button]
         public void ExplodeNeighbours()
         {
+            ExplodeCell();
+            
             for (int i = 0; i < Neighbours.Count; i++)
             {
                 Neighbours[i].ExplodeCell();
             }
 
-            EventManager.On2048Explode?.Invoke();
-            
-            
             CellManager.I.TraverseBoard();
+            _board.GetAllCellsDown();
         }
 
         public void ExplodeCell()
@@ -227,11 +202,6 @@ namespace _01_Scripts.Game.Core
             if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
             if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
             if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
-        }
-
-        private void OnDestroy()
-        {
-            Unsubscribe();
         }
     }
 }
