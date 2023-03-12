@@ -14,7 +14,7 @@ namespace _01_Scripts.Game.Core
 
         readonly MatchFinder _matchFinder = new MatchFinder();
 
-        public const int Rows = 11;
+        public const int Rows = 8;
         public const int RowLimit = 4;
         public const int Cols = 6;
 
