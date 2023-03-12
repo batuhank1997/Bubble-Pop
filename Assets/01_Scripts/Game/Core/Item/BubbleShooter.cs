@@ -31,12 +31,12 @@ public class BubbleShooter : MonoBehaviour
 
     void SetSubscriptions()
     {
-        GameManager.OnGameFail += OnGameFail;
+        EventManager.OnGameFail += OnGameFail;
     }
 
     private void OnDestroy()
     {
-        GameManager.OnGameFail -= OnGameFail;
+        EventManager.OnGameFail -= OnGameFail;
     }
 
     void OnGameFail()
@@ -78,13 +78,13 @@ public class BubbleShooter : MonoBehaviour
     void LoadItemToShoot()
     {
         _itemToShoot = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-        _itemToShoot.PrepareItem();
+        _itemToShoot.PrepareItem(null);
     }
     
     void LoadNextItemToShoot()
     {
         _nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
-        _nextItemToShoot.PrepareItem();
+        _nextItemToShoot.PrepareItem(null);
         _nextItemToShoot.transform.localScale *= 0.75f;
     }
     

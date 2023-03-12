@@ -18,7 +18,6 @@ public class BoardTraverser
 
         var startingCell = board.Cells[0, 0];
 
-        Debug.Log(startingCell.name);
         DFSAll(startingCell);
         DFSConnecteds(startingCell);
         var allCells = allVisitedCells;

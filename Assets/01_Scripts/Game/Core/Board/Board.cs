@@ -11,23 +11,43 @@ namespace _01_Scripts.Game.Core
     {
         [SerializeField] Cell _cellPrefab;
         [SerializeField] Transform _cellParent;
-
+        
         readonly MatchFinder _matchFinder = new MatchFinder();
 
         public const int Rows = 12;
         public const int RowLimit = 4;
         public const int Cols = 6;
 
-        private int cellRowCounter = RowLimit;
-
         public Cell[,] Cells = new Cell[Cols, Rows];
+
 
         public void Init()
         {
             CreateCells();
             PrepareCells();
+
+            Subscribe();
+        }
+
+        #region Subscriptions
+
+        private void Subscribe()
+        {
+            EventManager.On2048Explode += On2048Explode;
         }
         
+        private void Unsubscribe()
+        {
+            EventManager.On2048Explode -= On2048Explode;
+        }
+        
+        private void On2048Explode()
+        {
+            GetAllCellsDown();
+        }
+
+        #endregion
+
         void CreateCells()
         {
             for (int i = 0; i < Rows; i++)
@@ -99,7 +119,7 @@ namespace _01_Scripts.Game.Core
                 mergeableCell.Merge(lastCell);
             }
             
-            lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), cells.Count);
+            lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), Mathf.Clamp(cells.Count, 0, 9));
 
             return true;
         }
@@ -123,6 +143,11 @@ namespace _01_Scripts.Game.Core
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
         }
     }
 }

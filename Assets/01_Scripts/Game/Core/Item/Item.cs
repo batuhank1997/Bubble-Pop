@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Settings;
 using DG.Tweening;
@@ -40,8 +41,10 @@ namespace _01_Scripts.Game.Core
             DOVirtual.DelayedCall(Random.Range(0f, 0.25f),()=>transform.DOScale(1, 0.2f));
         }
 
-        public void PrepareItem()
+        public void PrepareItem(Cell cell)
         {
+            _cell = cell;
+            
             SetValue();
             SetColor();
             SetText();
@@ -60,7 +63,7 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            _pow = Random.Range(1, 6);
+            _pow = Random.Range(1, 10);
             _value = (int)Mathf.Pow(2, _pow);
         }
         
@@ -68,6 +71,9 @@ namespace _01_Scripts.Game.Core
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
             _pow = pow;
+
+            if (total > 2048)
+                total = 2048;
             
             _value = (int)total;
         }
@@ -112,7 +118,19 @@ namespace _01_Scripts.Game.Core
 
         void FillCell(Cell cell)
         {
+            _cell = cell;
             cell.FillWithRandomItem(this);
+        }
+
+        public void Explode()
+        {
+            if (DOTween.IsTweening(transform))
+            {
+                return;
+            }
+            ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
+                SpriteColor);
+            Destroy(gameObject);
         }
 
         public void Fall()

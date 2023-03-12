@@ -14,20 +14,45 @@ namespace _01_Scripts.Game.Core
         [SerializeField] private Item itemPrefab;
         public List<Cell> Neighbours = new List<Cell>();
         public bool HasItem;
-        
+
         public Item Item;
-        
+
         public int X;
         public int Y;
-        
+
         public bool IsVisited;
         public bool IsOffsetLine;
         private bool isInFirstRow;
-        
+
         private Board _board;
-        
+
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
+
+        private void Start()
+        {
+            Subscribe();
+        }
+
+        #region Subscriptions
+
+        private void Subscribe()
+        {
+            EventManager.On2048Explode += On2048Explode;
+        }
+        
+        private void Unsubscribe()
+        {
+            EventManager.On2048Explode -= On2048Explode;
+        }
+        
+        private void On2048Explode()
+        {
+            ExplodeCell();
+        }
+
+        #endregion
+        
 
         public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
@@ -36,17 +61,16 @@ namespace _01_Scripts.Game.Core
             IsOffsetLine = hasOffset;
             isInFirstRow = Y == 0;
             _board = board;
-            
+
             UpdateNeighbours();
             UpdateName();
-            
+
             if (y >= Board.RowLimit)
                 return;
-            
-            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-            Item.PrepareItem();
-            HasItem = true;
 
+            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+            Item.PrepareItem(this);
+            HasItem = true;
         }
 
         void UpdateName()
@@ -63,21 +87,21 @@ namespace _01_Scripts.Game.Core
                 Neighbours.Remove(downLeftNeighbour);
                 Neighbours.Remove(downRightNeighbour);
             }
-            
+
             if (Y == Board.Rows)
             {
                 ResetCell();
                 Y = 0;
                 transform.DOMoveY(0, 0f);
                 Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-                Item.PrepareItem();
+                Item.PrepareItem(this);
                 HasItem = true;
             }
             else
             {
                 transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
             }
-            
+
             UpdateNeighbours();
             UpdateName();
         }
@@ -86,14 +110,16 @@ namespace _01_Scripts.Game.Core
         {
             if (Item)
                 Destroy(Item.gameObject);
-            
+
             DOTween.Kill(transform);
             Neighbours.Clear();
         }
 
         public void KillItem()
         {
-            print(name);
+            if (Y == 0)
+                return;
+            
             var temp = Item;
             Item = null;
             HasItem = false;
@@ -101,34 +127,61 @@ namespace _01_Scripts.Game.Core
             temp.transform.SetParent(null);
             temp.Fall();
         }
-        
+
+        [Button]
+        public void ExplodeNeighbours()
+        {
+            for (int i = 0; i < Neighbours.Count; i++)
+            {
+                Neighbours[i].ExplodeCell();
+            }
+
+            EventManager.On2048Explode?.Invoke();
+            
+            
+            CellManager.I.TraverseBoard();
+        }
+
+        public void ExplodeCell()
+        {
+            if (Item)
+                Item.Explode();
+            
+            HasItem = false;
+        }
+
         public void Merge(Cell cell)
         {
             if (Item)
             {
                 var temp = Item;
                 Item = null;
-                
+
                 temp.transform.SetParent(cell.transform);
-                temp.transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(() => Destroy(temp.gameObject));
+                temp.transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(() => temp.Explode());
                 HasItem = false;
             }
         }
-        
-        public void FillWithCalculatedItem(int baseNumber,int pow)
+
+        public void FillWithCalculatedItem(int baseNumber, int pow)
         {
             Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             Item.PrepareCalculatedItem(baseNumber, pow);
             HasItem = true;
-            ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity, Item.SpriteColor);
+            
+            ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
+                Item.SpriteColor);
+            
             StartCoroutine(TryMergeAgain());
         }
 
         IEnumerator TryMergeAgain()
         {
             yield return new WaitForSeconds(0.25f);
-
-            if (!_board.TryMergeMatchingCells(this))
+            
+            if (Item.GetValue() == 2048)
+                ExplodeNeighbours();
+            else if (!_board.TryMergeMatchingCells(this))
             {
                 CellManager.I.TraverseBoard();
                 _board.GetAllCellsDown();
@@ -140,7 +193,7 @@ namespace _01_Scripts.Game.Core
             Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero,0.2f).OnComplete(()=> _board.TryMergeMatchingCells(this));
+            item.transform.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => _board.TryMergeMatchingCells(this));
         }
 
         [Button]
@@ -154,7 +207,7 @@ namespace _01_Scripts.Game.Core
                 }
             }
         }
-        
+
         [Button]
         void UpdateNeighbours()
         {
@@ -164,7 +217,7 @@ namespace _01_Scripts.Game.Core
             var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft);
             var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
             var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
-            
+
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
 
@@ -175,7 +228,10 @@ namespace _01_Scripts.Game.Core
             if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
             if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
         }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
+        }
     }
 }
-
-
