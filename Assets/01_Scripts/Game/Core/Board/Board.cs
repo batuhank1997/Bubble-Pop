@@ -15,7 +15,7 @@ namespace _01_Scripts.Game.Core
         readonly MatchFinder _matchFinder = new MatchFinder();
 
         public const int Rows = 8;
-        public const int RowLimit = 3;
+        public const int RowLimit = 4;
         public const int Cols = 6;
 
         private int cellRowCounter = RowLimit;
@@ -34,7 +34,7 @@ namespace _01_Scripts.Game.Core
             {
                 for (int j = 0; j < Cols; j++)
                 {
-                    var rowOffset = i % 2 == 0 ? 0 : 0.5f;
+                    var rowOffset = i % 2 != 0 ? 0 : 0.5f;
                     
                     var cell = Instantiate(_cellPrefab, new Vector3(j + rowOffset, -i * 0.875f, 0), Quaternion.identity);
                     
@@ -50,7 +50,9 @@ namespace _01_Scripts.Game.Core
             {
                 for (int j = 0; j < Cols; j++)
                 {
-                    Cells[j, i].PrepareCell(j, i, this);
+                    var rowOffset = i % 2 == 0;
+
+                    Cells[j, i].PrepareCell(j, i, this, rowOffset);
                 }
             }
         }
@@ -124,7 +126,7 @@ namespace _01_Scripts.Game.Core
                             return Cells[cell.X + 1, cell.Y - 1];
                         }
                     }
-                    else if (cell.Y > 0 && cell.X < Cols - 1)
+                    else if (cell.Y > 0)
                     {
                         return Cells[cell.X, cell.Y - 1];
                     }
@@ -134,7 +136,7 @@ namespace _01_Scripts.Game.Core
                     
                     if (cell.IsOffsetLine)
                     {
-                        if (cell.Y > 0 && cell.X < Cols)
+                        if (cell.Y > 0)
                         {
                             return Cells[cell.X, cell.Y - 1];
                         }
@@ -155,7 +157,7 @@ namespace _01_Scripts.Game.Core
                             return Cells[cell.X + 1, cell.Y + 1];
                         }
                     }
-                    else if (cell.Y < Rows - 1 && cell.X < Cols)
+                    else if (cell.Y < Rows - 1)
                     {
                         return Cells[cell.X, cell.Y + 1];
                     }
