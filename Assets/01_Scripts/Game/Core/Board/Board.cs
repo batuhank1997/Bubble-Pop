@@ -14,7 +14,7 @@ namespace _01_Scripts.Game.Core
 
         readonly MatchFinder _matchFinder = new MatchFinder();
 
-        public const int Rows = 8;
+        public const int Rows = 12;
         public const int RowLimit = 4;
         public const int Cols = 6;
 
@@ -81,12 +81,6 @@ namespace _01_Scripts.Game.Core
                     Cells[j, i].MoveCellDownwards();
                 }
             }
-            
-            cellRowCounter++;
-            
-            if (cellRowCounter >= Rows)
-                GameManager.OnGameFail?.Invoke();
-
         }
         
         public bool TryMergeMatchingCells(Cell cell)
