@@ -77,7 +77,7 @@ namespace _01_Scripts.Game.Core
             
             _value = (int)total;
         }
-
+        
         public int GetValue() => _value;
         
         void SetText()

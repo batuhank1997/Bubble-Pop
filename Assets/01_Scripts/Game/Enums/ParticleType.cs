@@ -3,5 +3,6 @@
     public enum ParticleType
     {
         Destroy,
+        TextFeedback
     }
 }

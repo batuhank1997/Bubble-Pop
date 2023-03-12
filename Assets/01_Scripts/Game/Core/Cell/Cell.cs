@@ -5,6 +5,7 @@ using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace _01_Scripts.Game.Core
@@ -106,11 +107,8 @@ namespace _01_Scripts.Game.Core
         [Button]
         public void ExplodeNeighbours()
         {
-            
             for (int i = 0; i < Neighbours.Count; i++)
-            {
                 Neighbours[i].ExplodeCell();
-            }
 
             ExplodeCell();
             CameraManager.I.CamShake();
@@ -143,11 +141,12 @@ namespace _01_Scripts.Game.Core
         {
             Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             Item.PrepareCalculatedItem(baseNumber, pow);
+
             HasItem = true;
             
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 Item.SpriteColor);
-            
+
             StartCoroutine(TryMergeAgain());
         }
 
@@ -155,8 +154,13 @@ namespace _01_Scripts.Game.Core
         {
             yield return new WaitForSeconds(0.25f);
             
+            ParticleManager.I.PlayTextFeedback(ParticleType.TextFeedback, transform.position, Quaternion.identity,
+                Item.GetValue());
+
             if (Item.GetValue() == 2048)
+            {
                 ExplodeNeighbours();
+            }
             else if (!_board.TryMergeMatchingCells(this))
             {
                 CellManager.I.TraverseBoard();
