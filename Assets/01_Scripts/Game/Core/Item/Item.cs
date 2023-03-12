@@ -101,6 +101,21 @@ namespace _01_Scripts.Game.Core
                 }
             }
         }
+        
+        private void PunchNeighbours(Cell targetCell)
+        {
+            for (var i = 0; i < targetCell.Neighbours.Count; i++)
+            {
+                var cell = targetCell.Neighbours[i];
+                
+                if (!cell.HasItem)
+                    continue;
+
+                var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.15f;
+
+                cell.transform.DOMove(dir, 0.075f).SetRelative(true).SetLoops(2, LoopType.Yoyo);
+            }
+        }
 
         void FillNearestCell()
         {
@@ -113,6 +128,7 @@ namespace _01_Scripts.Game.Core
             List<Cell> emptyCells = FindEmptyCells();
 
             var closest = GetClosestCell(emptyCells);
+            PunchNeighbours(closest);
             FillCell(closest);
         }
 
