@@ -115,7 +115,12 @@ namespace _01_Scripts.Game.Core
             cell.FillWithRandomItem(this);
         }
 
-        List<Cell> FindEmptyCells()
+        public void Fall()
+        {
+            GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+        }
+
+            List<Cell> FindEmptyCells()
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, 1.5f).ToArray();
 

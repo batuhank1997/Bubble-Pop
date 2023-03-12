@@ -22,12 +22,6 @@ namespace _01_Scripts.Game.Core
 
         public Cell[,] Cells = new Cell[Cols, Rows];
 
-        /*#region TableMatrixInspector
-
-        
-
-        #endregion*/
-
         public void Init()
         {
             CreateCells();

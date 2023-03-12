@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Enums;
+using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace _01_Scripts.Game.Core
     public class Cell : MonoBehaviour
     {
         [SerializeField] private Item itemPrefab;
+        public List<Cell> Neighbours = new List<Cell>();
         public bool HasItem;
         
         public Item Item;
@@ -18,13 +20,12 @@ namespace _01_Scripts.Game.Core
         public int X;
         public int Y;
         
-        private bool isInFirstRow;
+        public bool IsVisited;
         public bool IsOffsetLine;
+        private bool isInFirstRow;
         
         private Board _board;
-
-        public List<Cell> Neighbours = new List<Cell>();
-
+        
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
 
@@ -37,6 +38,7 @@ namespace _01_Scripts.Game.Core
             _board = board;
             
             UpdateNeighbours();
+            UpdateName();
             
             if (y >= Board.RowLimit)
                 return;
@@ -44,6 +46,12 @@ namespace _01_Scripts.Game.Core
             Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             Item.PrepareItem();
             HasItem = true;
+
+        }
+
+        void UpdateName()
+        {
+            name = "Cell (X: " + X + " Y: " + Y + ")";
         }
 
         public void MoveCellDownwards()
@@ -71,6 +79,7 @@ namespace _01_Scripts.Game.Core
             }
             
             UpdateNeighbours();
+            UpdateName();
         }
 
         void ResetCell()
@@ -80,6 +89,17 @@ namespace _01_Scripts.Game.Core
             
             DOTween.Kill(transform);
             Neighbours.Clear();
+        }
+
+        public void KillItem()
+        {
+            print(name);
+            var temp = Item;
+            Item = null;
+            HasItem = false;
+
+            temp.transform.SetParent(null);
+            temp.Fall();
         }
         
         public void Merge(Cell cell)
@@ -107,9 +127,12 @@ namespace _01_Scripts.Game.Core
         IEnumerator TryMergeAgain()
         {
             yield return new WaitForSeconds(0.25f);
-            
+
             if (!_board.TryMergeMatchingCells(this))
+            {
+                CellManager.I.TraverseBoard();
                 _board.GetAllCellsDown();
+            }
         }
 
         public void FillWithRandomItem(Item item)
