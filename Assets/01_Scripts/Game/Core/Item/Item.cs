@@ -14,11 +14,13 @@ namespace _01_Scripts.Game.Core
     public class Item : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private TextMeshPro _valueTMP;
         [SerializeField] private Collider2D _col;
         [SerializeField] private int _value;
         
         private Cell _cell;
+        private Rigidbody2D rb;
 
         private int _pow = 0;
         private bool _hasFilled;
@@ -27,7 +29,9 @@ namespace _01_Scripts.Game.Core
         
         private void Awake()
         {
+            rb = GetComponent<Rigidbody2D>();
             _col.enabled = false;
+            _trailRenderer.enabled = false;
         }
 
         private void Start()
@@ -59,6 +63,7 @@ namespace _01_Scripts.Game.Core
         public void SetReadyToShoot()
         {
             _col.enabled = true;
+            _trailRenderer.enabled = true;
         }
 
         void SetValue()
@@ -89,6 +94,9 @@ namespace _01_Scripts.Game.Core
         {
             _spriteRenderer.color = CellManager.I.SetItemColor(_pow - 1);
             SpriteColor = _spriteRenderer.color;
+            
+            _trailRenderer.startColor = SpriteColor;
+            _trailRenderer.endColor = new Color(SpriteColor.a, SpriteColor.b, SpriteColor.b, 0);
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -150,7 +158,8 @@ namespace _01_Scripts.Game.Core
 
         public void Fall()
         {
-            GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+            rb.gravityScale = 1.5f;
+            rb.AddForce(new Vector2(Random.Range(-2.5f, 2.5f), 0), ForceMode2D.Impulse);
         }
 
             List<Cell> FindEmptyCells()
