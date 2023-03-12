@@ -36,7 +36,7 @@ namespace _01_Scripts.Game.Core
             isInFirstRow = Y == 0;
             _board = board;
             
-            AddNeighbours();
+            UpdateNeighbours();
             
             if (y >= Board.RowLimit)
                 return;
@@ -55,7 +55,6 @@ namespace _01_Scripts.Game.Core
                 ResetCell();
                 Y = 0;
                 transform.DOMoveY(0, 0f);
-                AddNeighbours();
                 Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
                 Item.PrepareItem();
                 HasItem = true;
@@ -65,21 +64,7 @@ namespace _01_Scripts.Game.Core
                 transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
             }
             
-            /*if (Y + 1 != Board.Rows)
-            {
-                Y++;
-                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
-            }
-            else
-            {
-                ResetCell();
-                Y = 0;
-                transform.DOMoveY(0, 0f);
-                AddNeighbours();
-                Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-                Item.PrepareItem();
-                HasItem = true;
-            }*/
+            UpdateNeighbours();
         }
 
         void ResetCell()
@@ -142,14 +127,14 @@ namespace _01_Scripts.Game.Core
         }
         
         [Button]
-        void AddNeighbours()
+        void UpdateNeighbours()
         {
-            var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight, IsOffsetLine);
-            var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft, IsOffsetLine);
-            var lowRightCell = _board.GetNeighbourWithDirection(this, Direction.DownRight, IsOffsetLine);
-            var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft, IsOffsetLine);
-            var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right, IsOffsetLine);
-            var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left, IsOffsetLine);
+            var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight);
+            var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft);
+            var lowRightCell = _board.GetNeighbourWithDirection(this, Direction.DownRight);
+            var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft);
+            var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
+            var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
             
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
