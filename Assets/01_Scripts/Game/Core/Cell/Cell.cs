@@ -106,13 +106,14 @@ namespace _01_Scripts.Game.Core
         [Button]
         public void ExplodeNeighbours()
         {
-            ExplodeCell();
             
             for (int i = 0; i < Neighbours.Count; i++)
             {
                 Neighbours[i].ExplodeCell();
             }
 
+            ExplodeCell();
+            CameraManager.I.CamShake();
             CellManager.I.TraverseBoard();
             _board.GetAllCellsDown();
         }
