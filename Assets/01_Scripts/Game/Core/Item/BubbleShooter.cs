@@ -70,7 +70,7 @@ namespace _01_Scripts.Game.Core
         {
             Transform bubble = _itemToShoot.transform;
             var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
-            _itemToShoot.SetReadyToShoot(shootSpeed, dir);
+            _itemToShoot.Shot(shootSpeed, dir);
 
             bubble.DOMove(dir, shootSpeed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear)
                 .SetLoops(-1, LoopType.Incremental);
@@ -88,6 +88,7 @@ namespace _01_Scripts.Game.Core
         {
             _nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
             _nextItemToShoot.PrepareItem(null);
+            DOTween.Kill(_nextItemToShoot);
             _nextItemToShoot.transform.localScale *= 0.75f;
         }
 

@@ -45,8 +45,11 @@ namespace _01_Scripts.Game.Core
 
         void DoFirstScale()
         {
+            if (!_cell)
+                return;
+
             transform.localScale = Vector3.zero;
-            DOVirtual.DelayedCall(Random.Range(0f, 0.25f),()=>transform.DOScale(1, 0.2f));
+            DOVirtual.DelayedCall(Random.Range(0f, 0.25f), () => transform.DOScale(1, 0.2f));
         }
 
         public void PrepareItem(Cell cell)
@@ -64,7 +67,7 @@ namespace _01_Scripts.Game.Core
             SetText();
         }
 
-        public void SetReadyToShoot(float speed, Vector3 dir)
+        public void Shot(float speed, Vector3 dir)
         {
             _speed = speed;
             _dir = dir;
