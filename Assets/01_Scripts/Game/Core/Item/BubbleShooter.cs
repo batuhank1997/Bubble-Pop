@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Core;
 using _01_Scripts.Game.Managers;
+using _01_Scripts.Game.Mechanics;
 using DG.Tweening;
 using UnityEngine;
 
@@ -11,7 +12,9 @@ namespace _01_Scripts.Game.Core
     public class BubbleShooter : MonoBehaviour
     {
         [SerializeField] private Item itemPrefab;
+        [SerializeField] private TrajactoryPrediction trajactory;
         [SerializeField] private float shootSpeed;
+
 
         private Item _itemToShoot;
         private Item _nextItemToShoot;
@@ -55,13 +58,20 @@ namespace _01_Scripts.Game.Core
 
         private void GetInput()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                trajactory.EnableTrajectory();
+            }
             if (Input.GetMouseButton(0))
             {
                 _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                var originPos = transform.position;
+                
+                trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
             }
-
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
+                trajactory.DisableTrajectory();
                 Shoot();
             }
         }
