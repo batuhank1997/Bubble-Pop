@@ -58,6 +58,9 @@ namespace _01_Scripts.Game.Core
         {
             Y++;
 
+            if (HasItem && Y == Board.Rows)
+                GameManager.OnGameFail?.Invoke();
+
             if (Y + 1 == Board.Rows)
             {
                 Neighbours.Remove(downLeftNeighbour);

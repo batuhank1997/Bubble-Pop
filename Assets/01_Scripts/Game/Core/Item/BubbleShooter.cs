@@ -6,74 +6,103 @@ using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using UnityEngine;
 
-public class BubbleShooter : MonoBehaviour
+namespace _01_Scripts.Game.Core
 {
-    [SerializeField] private Item itemPrefab;
-    [SerializeField] private float shootSpeed;
-
-    private Item _itemToShoot;
-    private Item _nextItemToShoot;
-    private Vector3 _shootPos = Vector3.zero;
-
-    private Camera cam;
-    private bool canShoot = true;
-    
-    private void Start()
+    public class BubbleShooter : MonoBehaviour
     {
-        cam = Camera.main;
-        
-        LoadItemToShoot();
-        LoadNextItemToShoot();
-    }
+        [SerializeField] private Item itemPrefab;
+        [SerializeField] private float shootSpeed;
 
-    private void Update()
-    {
-        GetInput();
-    }
+        private Item _itemToShoot;
+        private Item _nextItemToShoot;
+        private Vector3 _shootPos = Vector3.zero;
 
-    private void GetInput()
-    {
-        if (Input.GetMouseButton(0))
+        private Camera cam;
+        private bool canShoot = true;
+
+        private void Start()
         {
-            _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Subscribe();
+            cam = Camera.main;
+
+            LoadItemToShoot();
+            LoadNextItemToShoot();
         }
 
-        if (Input.GetMouseButtonUp(0) && canShoot)
+        #region Subscriptions
+
+        void Subscribe()
         {
-            Shoot();
+            GameManager.OnGameFail += OnGameFail;
         }
-    }
 
-    void Shoot()
-    {
-        Transform bubble = _itemToShoot.transform;
-        var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
-        _itemToShoot.SetReadyToShoot(shootSpeed, dir);
-        
-        bubble.DOMove(dir, shootSpeed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+        private void OnGameFail()
+        {
+            canShoot = false;
+        }
 
-        ReloadShooter();
-    }
+        void Unsubscribe()
+        {
+            GameManager.OnGameFail -= OnGameFail;
+        }
 
-    void LoadItemToShoot()
-    {
-        _itemToShoot = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-        _itemToShoot.PrepareItem(null);
-    }
-    
-    void LoadNextItemToShoot()
-    {
-        _nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
-        _nextItemToShoot.PrepareItem(null);
-        _nextItemToShoot.transform.localScale *= 0.75f;
-    }
-    
-    void ReloadShooter()
-    {
-        _itemToShoot = _nextItemToShoot;
-        _itemToShoot.transform.DOScale(1, 0.25f);
-        _itemToShoot.transform.DOMove(transform.position, 0.25f);
-        
-        LoadNextItemToShoot();
+        #endregion
+
+        private void Update()
+        {
+            GetInput();
+        }
+
+        private void GetInput()
+        {
+            if (Input.GetMouseButton(0))
+            {
+                _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
+            }
+
+            if (Input.GetMouseButtonUp(0) && canShoot)
+            {
+                Shoot();
+            }
+        }
+
+        void Shoot()
+        {
+            Transform bubble = _itemToShoot.transform;
+            var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
+            _itemToShoot.SetReadyToShoot(shootSpeed, dir);
+
+            bubble.DOMove(dir, shootSpeed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Incremental);
+
+            ReloadShooter();
+        }
+
+        void LoadItemToShoot()
+        {
+            _itemToShoot = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            _itemToShoot.PrepareItem(null);
+        }
+
+        void LoadNextItemToShoot()
+        {
+            _nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
+            _nextItemToShoot.PrepareItem(null);
+            _nextItemToShoot.transform.localScale *= 0.75f;
+        }
+
+        void ReloadShooter()
+        {
+            _itemToShoot = _nextItemToShoot;
+            _itemToShoot.transform.DOScale(1, 0.25f);
+            _itemToShoot.transform.DOMove(transform.position, 0.25f);
+
+            LoadNextItemToShoot();
+        }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
+        }
     }
 }

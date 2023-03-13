@@ -114,7 +114,7 @@ namespace _01_Scripts.Game.Core
                     FillNearestCell();
                 }
             }
-            if (col.CompareTag(Keys.TAG_EDGE))
+            if (col.CompareTag(Keys.TAG_EDGE) && !_cell)
             {
                 var touchPoint = col.ClosestPoint(transform.position);
                 BounceFromEdge(touchPoint);
