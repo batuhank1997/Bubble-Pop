@@ -129,6 +129,8 @@ namespace _01_Scripts.Game.Core
             var bouncedDir = Vector3.Reflect(_dir.normalized, normal);
             
             transform.DOMove(bouncedDir, _speed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+            
+            _dir = bouncedDir;
         }
 
         private void PunchNeighbours(Cell targetCell)
