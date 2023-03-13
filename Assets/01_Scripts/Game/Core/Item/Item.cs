@@ -4,7 +4,9 @@ using System.Linq;
 using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Settings;
+using _01_Scripts.Utils;
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -24,6 +26,8 @@ namespace _01_Scripts.Game.Core
 
         private int _pow = 0;
         private bool _hasFilled;
+        private float _speed = 0;
+        private Vector3 _dir;
 
         public Color SpriteColor;
         
@@ -60,8 +64,10 @@ namespace _01_Scripts.Game.Core
             SetText();
         }
 
-        public void SetReadyToShoot()
+        public void SetReadyToShoot(float speed, Vector3 dir)
         {
+            _speed = speed;
+            _dir = dir;
             _col.enabled = true;
             _trailRenderer.enabled = true;
         }
@@ -108,8 +114,23 @@ namespace _01_Scripts.Game.Core
                     FillNearestCell();
                 }
             }
+            if (col.CompareTag(Keys.TAG_EDGE))
+            {
+                var touchPoint = col.ClosestPoint(transform.position);
+                BounceFromEdge(touchPoint);
+            }
         }
-        
+
+        private void BounceFromEdge(Vector2 touchPoint)
+        {
+            DOTween.Kill(transform);
+
+            var normal = ((touchPoint - Vector2.right) - touchPoint).normalized;
+            var bouncedDir = Vector3.Reflect(_dir.normalized, normal);
+            
+            transform.DOMove(bouncedDir, _speed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+        }
+
         private void PunchNeighbours(Cell targetCell)
         {
             for (var i = 0; i < targetCell.Neighbours.Count; i++)
@@ -169,7 +190,7 @@ namespace _01_Scripts.Game.Core
             rb.AddForce(new Vector2(Random.Range(-2.5f, 2.5f), 0), ForceMode2D.Impulse);
         }
 
-            List<Cell> FindEmptyCells()
+        List<Cell> FindEmptyCells()
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, 1.5f).ToArray();
 

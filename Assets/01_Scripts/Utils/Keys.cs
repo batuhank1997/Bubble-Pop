@@ -22,6 +22,7 @@
         public const string TAG_RESPAWN = "Respawn";
         public const string TAG_EDITOR_ONLY = "EditorOnly";
         public const string TAG_MAIN_CAMERA = "MainCamera";
+        public const string TAG_EDGE = "Edge";
 
         #endregion TagKeys
 
