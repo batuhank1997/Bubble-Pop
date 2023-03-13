@@ -156,6 +156,13 @@ namespace _01_Scripts.Game.Core
             Destroy(gameObject);
         }
 
+        public void MoveToMerge(Cell targetCell)
+        {
+            transform.SetParent(targetCell.transform);
+            _valueTMP.DOFade(0, 0.1f);
+            transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(Explode);
+        }
+
         public void Fall()
         {
             rb.gravityScale = 1.5f;

@@ -17,9 +17,10 @@ public class ParticleManager : Singleton<ParticleManager>
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
         var vfx = Instantiate(particle, pos, rot);
         
-        var main = vfx.GetComponent<ParticleSystem>().main;
-        main.startColor = color;
-        
+        var renderer = vfx.GetComponent<Renderer>();
+        renderer.material.color = color;
+
+        vfx.GetComponent<Renderer>().material = renderer.material;
         Destroy(vfx, 1.5f);
     }
     

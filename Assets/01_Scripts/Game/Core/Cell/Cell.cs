@@ -113,6 +113,10 @@ namespace _01_Scripts.Game.Core
             ExplodeCell();
             CameraManager.I.CamShake();
             CellManager.I.TraverseBoard();
+            
+            ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
+                Item.SpriteColor);
+            
             _board.GetAllCellsDown();
         }
 
@@ -128,11 +132,9 @@ namespace _01_Scripts.Game.Core
         {
             if (Item)
             {
-                var temp = Item;
+                Item.MoveToMerge(cell);;
                 Item = null;
 
-                temp.transform.SetParent(cell.transform);
-                temp.transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(() => temp.Explode());
                 HasItem = false;
             }
         }
