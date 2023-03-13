@@ -190,6 +190,7 @@ namespace _01_Scripts.Game.Core
         {
             rb.gravityScale = 1.5f;
             rb.AddForce(new Vector2(Random.Range(-2.5f, 2.5f), 0), ForceMode2D.Impulse);
+            Destroy(gameObject, 3);
         }
 
         List<Cell> FindEmptyCells()
