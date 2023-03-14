@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1447088617203585353}
   - component: {fileID: 1447088617203585354}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1447088617491034595}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PredictedItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 5660918159183753029}
   - component: {fileID: 6884990262025634180}
   - component: {fileID: 8286142709361747685}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}

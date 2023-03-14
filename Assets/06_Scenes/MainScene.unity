@@ -200,7 +200,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 311853531393047423, guid: 9d12dd8fa741cf14380a6f87d667531f, type: 3}
-  edges: {fileID: 2059631595}
   trajactory: {fileID: 373322291}
   shootSpeed: 35
 --- !u!114 &373322291
@@ -218,6 +217,9 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 320
+  rayMask2:
+    serializedVersion: 2
+    m_Bits: 256
   distance: 10
   lineRenderer1: {fileID: 1267692051}
   lineRenderer2: {fileID: 1491220323}
@@ -1025,7 +1027,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.5, y: -5.5}

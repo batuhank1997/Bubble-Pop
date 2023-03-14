@@ -97,12 +97,16 @@ namespace _01_Scripts.Game.Core
         
         public void PredictItem()
         {
-            predictedItem.transform.localScale = Vector3.Lerp(predictedItem.transform.localScale, Vector3.one, 30 * Time.deltaTime);
+            if (DOTween.IsTweening(predictedItem))
+                return;
+            
+            predictedItem.DOScale(Vector3.one, 0.2f);
         }
         
         public void StopPredictingItem()
         {
-            predictedItem.transform.localScale = Vector3.zero;
+            DOTween.Kill(predictedItem);
+            predictedItem.localScale = Vector3.zero;
         }
 
         public void KillItem()

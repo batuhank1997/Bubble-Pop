@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class TrajactoryPrediction : MonoBehaviour
 {
     [SerializeField] private LayerMask rayMask;
+    [SerializeField] private LayerMask rayMask2;
     [SerializeField] private float distance;
     
     [SerializeField] private LineRenderer lineRenderer1;
@@ -41,13 +42,13 @@ public class TrajactoryPrediction : MonoBehaviour
 
             Ray2D reflectedRay = new Ray2D(hit.point, reflectDirection);
 
-            RaycastHit2D hit2 = Physics2D.Raycast(reflectedRay.origin, reflectedRay.direction, distance, rayMask);
-
-            PredictItemPlace(hit2);
-
+            RaycastHit2D hit2 = Physics2D.Raycast(reflectedRay.origin, reflectedRay.direction, distance, rayMask2);
+            
             Debug.DrawRay(reflectedRay.origin, reflectedRay.direction * distance, Color.green);
 
             SetLine(lineRenderer2, reflectedRay.origin, reflectedRay.GetPoint(distance));
+            
+            PredictItemPlace(hit2);
         }
         else
         {
@@ -61,6 +62,8 @@ public class TrajactoryPrediction : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out Item item))
             {
+                Debug.Log(hit.collider.name);
+
                 Cell temp = targetCell;
                 targetCell = item.GetClosestCell(item.GetEmptyNeighbours(), hit.point);
 
