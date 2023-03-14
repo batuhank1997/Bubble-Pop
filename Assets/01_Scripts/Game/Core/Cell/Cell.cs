@@ -13,6 +13,7 @@ namespace _01_Scripts.Game.Core
     public class Cell : MonoBehaviour
     {
         [SerializeField] private Item itemPrefab;
+        [SerializeField] private Transform predictedItem;
         public List<Cell> Neighbours = new List<Cell>();
         public bool HasItem;
 
@@ -92,6 +93,16 @@ namespace _01_Scripts.Game.Core
 
             DOTween.Kill(transform);
             Neighbours.Clear();
+        }
+        
+        public void PredictItem()
+        {
+            predictedItem.transform.localScale = Vector3.Lerp(predictedItem.transform.localScale, Vector3.one, 30 * Time.deltaTime);
+        }
+        
+        public void StopPredictingItem()
+        {
+            predictedItem.transform.localScale = Vector3.zero;
         }
 
         public void KillItem()

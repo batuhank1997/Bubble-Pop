@@ -72,6 +72,7 @@ namespace _01_Scripts.Game.Core
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
                 trajactory.DisableTrajectory();
+                
                 Shoot();
             }
         }

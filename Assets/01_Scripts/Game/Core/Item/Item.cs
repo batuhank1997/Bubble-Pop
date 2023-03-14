@@ -18,14 +18,14 @@ namespace _01_Scripts.Game.Core
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private TextMeshPro _valueTMP;
-        [SerializeField] private Collider2D _col;
+        [SerializeField] private CircleCollider2D _col;
         [SerializeField] private int _value;
         
         private Cell _cell;
         private Rigidbody2D rb;
 
         private int _pow = 0;
-        private bool _hasFilled;
+        private bool _hasFilled = true;
         private float _speed = 0;
         private Vector3 _dir;
 
@@ -34,7 +34,6 @@ namespace _01_Scripts.Game.Core
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
-            _col.enabled = false;
             _trailRenderer.enabled = false;
         }
 
@@ -55,6 +54,8 @@ namespace _01_Scripts.Game.Core
         public void PrepareItem(Cell cell)
         {
             _cell = cell;
+            if (!cell)
+                _col.enabled = false;
             
             SetValue();
             SetColor();
@@ -62,6 +63,8 @@ namespace _01_Scripts.Game.Core
         }
         public void PrepareCalculatedItem(int baseNumber,int pow)
         {
+            _col.enabled = false;
+            
             SetValue(baseNumber, pow);
             SetColor();
             SetText();
@@ -69,9 +72,11 @@ namespace _01_Scripts.Game.Core
 
         public void Shot(float speed, Vector3 dir)
         {
+            _hasFilled = false;
             _speed = speed;
             _dir = dir;
             _col.enabled = true;
+            _col.radius = 0.1f;
             _trailRenderer.enabled = true;
         }
 
@@ -93,6 +98,7 @@ namespace _01_Scripts.Game.Core
         }
         
         public int GetValue() => _value;
+        public List<Cell> GetEmptyNeighbours() => FindEmptyCells();
         
         void SetText()
         {
@@ -110,7 +116,7 @@ namespace _01_Scripts.Game.Core
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.TryGetComponent(out Cell cell))
+            if (col.TryGetComponent(out Cell cell) && !_hasFilled)
             {
                 if (cell.HasItem)
                 {
@@ -161,7 +167,7 @@ namespace _01_Scripts.Game.Core
             DOTween.Kill(transform);
             List<Cell> emptyCells = FindEmptyCells();
 
-            var closest = GetClosestCell(emptyCells);
+            var closest = GetClosestCell(emptyCells, transform.position);
             PunchNeighbours(closest);
             FillCell(closest);
         }
@@ -169,6 +175,7 @@ namespace _01_Scripts.Game.Core
         void FillCell(Cell cell)
         {
             _cell = cell;
+            _col.radius = 0.5f;
             cell.FillWithRandomItem(this);
         }
 
@@ -213,15 +220,14 @@ namespace _01_Scripts.Game.Core
                 }
             }
             
-            _col.enabled = false;
             return emptyCells;
         }
 
-        Cell GetClosestCell(List<Cell> cells)
+        public Cell GetClosestCell(List<Cell> cells, Vector3 to)
         {
             Cell closestCell = null;
             float minDist = Mathf.Infinity;
-            Vector3 currentPos = transform.position;
+            Vector3 currentPos = to;
             foreach (Cell cell in cells)
             {
                 float dist = Vector3.Distance(cell.transform.position, currentPos);

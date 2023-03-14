@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 311853531220679634}
   - component: {fileID: 311853531220679633}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 311853531232976567}
   - component: {fileID: 311853531232976565}
   - component: {fileID: 311853531232976566}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 311853531393047423}
   - component: {fileID: 6439346303780846453}
   - component: {fileID: -6253350636348634312}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &-6253350636348634312
 CircleCollider2D:
@@ -342,7 +342,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.35
+  m_Radius: 0.5
 --- !u!1 &2381555573611763420
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8881787417056791003}
   - component: {fileID: 6493966242499761037}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
