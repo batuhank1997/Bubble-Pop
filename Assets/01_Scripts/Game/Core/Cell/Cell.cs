@@ -221,12 +221,15 @@ namespace _01_Scripts.Game.Core
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
 
-            if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);
-            if (upLeftCell && !Neighbours.Contains(upLeftCell)) Neighbours.Add(upLeftCell);
             if (lowRightCell && !Neighbours.Contains(lowRightCell)) Neighbours.Add(lowRightCell);
             if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
             if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
             if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
+            
+            if (Y == 1)
+                return;
+            if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);
+            if (upLeftCell && !Neighbours.Contains(upLeftCell)) Neighbours.Add(upLeftCell);
         }
     }
 }
