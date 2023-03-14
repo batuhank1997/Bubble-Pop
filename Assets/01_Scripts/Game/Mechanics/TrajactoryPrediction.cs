@@ -62,8 +62,6 @@ public class TrajactoryPrediction : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out Item item))
             {
-                Debug.Log(hit.collider.name);
-
                 Cell temp = targetCell;
                 targetCell = item.GetClosestCell(item.GetEmptyNeighbours(), hit.point);
 
