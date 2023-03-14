@@ -16,6 +16,7 @@ public class ParticleManager : Singleton<ParticleManager>
     {
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
         var vfx = Lean.Pool.LeanPool.Spawn(particle);
+        
         vfx.transform.position = pos;
         vfx.transform.rotation = rot;
         var renderer = vfx.GetComponent<Renderer>();
@@ -28,9 +29,13 @@ public class ParticleManager : Singleton<ParticleManager>
     public void PlayTextFeedback(ParticleType particleType, Vector3 pos, Quaternion rot, int number)
     {
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
-        var vfx = Instantiate(particle, pos, rot);
+        var vfx = Lean.Pool.LeanPool.Spawn(particle);
 
         var tmp = vfx.GetComponent<TextMeshPro>();
+        tmp.DOFade(1, 0f);
+        
+        vfx.transform.position = pos;
+        vfx.transform.rotation = rot;
         
         tmp.text = number.ToString();
         vfx.transform.DOMoveY(.75f, 0.35f).SetRelative(true).OnComplete(() =>
@@ -38,7 +43,7 @@ public class ParticleManager : Singleton<ParticleManager>
             tmp.DOFade(0, 0.2f);
         });
         
-        Destroy(vfx, 1f);
+        Lean.Pool.LeanPool.Despawn(vfx, 1f);
     }
     
     public void PlayComboTextFeedback(ParticleType particleType, int number)
@@ -47,12 +52,14 @@ public class ParticleManager : Singleton<ParticleManager>
             Destroy(comboTextObj);
 
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
-        var vfx = Instantiate(particle, new Vector3(2.75f, -5f, 0), Quaternion.identity);
+        var vfx = Lean.Pool.LeanPool.Spawn(particle);
+
         vfx.transform.localScale = Vector3.zero;
         
         comboTextObj = vfx;
         
         var tmp = vfx.GetComponent<TextMeshPro>();
+        tmp.DOFade(1, 0f);
         
         tmp.text = "X" + number;
         
@@ -61,6 +68,6 @@ public class ParticleManager : Singleton<ParticleManager>
             tmp.DOFade(0, 0.4f);
         });
         
-        Destroy(vfx, 1f);
+        Lean.Pool.LeanPool.Despawn(vfx, 1f);
     }
 }
