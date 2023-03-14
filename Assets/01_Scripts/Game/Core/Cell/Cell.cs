@@ -22,7 +22,6 @@ namespace _01_Scripts.Game.Core
 
         public bool IsVisited;
         public bool IsOffsetLine;
-        private bool isInFirstRow;
 
         private Board _board;
 
@@ -34,7 +33,6 @@ namespace _01_Scripts.Game.Core
             X = x;
             Y = y;
             IsOffsetLine = hasOffset;
-            isInFirstRow = Y == 0;
             _board = board;
 
             UpdateNeighbours();

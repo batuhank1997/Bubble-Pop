@@ -3,19 +3,17 @@ using _01_Scripts.Game.Core;
 
 public class BoardTraverser
 {
-    public Cell StartingCell;
-
     HashSet<Cell> allVisitedCells = new HashSet<Cell>();
     HashSet<Cell> connectedVisitedCells = new HashSet<Cell>();
 
-    public void TraverseBoardAndKill(Board board)
+    public void TraverseBoardAndKill(Board board, Cell startingCell)
     {
         ResetDFS(board);
 
-        var startingCell = board.Cells[0, 0];
+        var _startingCell = startingCell;
 
-        DFSAll(startingCell);
-        DFSConnecteds(startingCell);
+        DFSAll(_startingCell);
+        DFSConnecteds(_startingCell);
         var allCells = allVisitedCells;
         var connectedCells = connectedVisitedCells;
         
@@ -56,7 +54,6 @@ public class BoardTraverser
     
     private void DFSConnecteds(Cell startingCell)
     {
-        // Debug.Log("Visiting cell " + startingCell.name);
         connectedVisitedCells.Add(startingCell);
         startingCell.IsVisited = true;
 

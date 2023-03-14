@@ -21,7 +21,8 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void TraverseBoard()
         {
-            _boardTraverser.TraverseBoardAndKill(_board);
+            _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
+            // _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, Board.Cols - 1]);
         }
     }
 }
