@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using _01_Scripts.Game.Enums;
-using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Mechanics;
 using Sirenix.OdinInspector;
 

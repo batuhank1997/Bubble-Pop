@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using _01_Scripts.Game.Core;
 using _01_Scripts.Game.Enums;
-using _01_Scripts.Game.Managers;
 using UnityEngine;
 
 public static class ComboCounter

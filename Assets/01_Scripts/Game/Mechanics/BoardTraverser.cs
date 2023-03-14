@@ -1,9 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _01_Scripts.Game.Core;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 public class BoardTraverser
 {

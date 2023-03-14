@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using TMPro;
 using UnityEngine;
 
 namespace _01_Scripts.Game.Core

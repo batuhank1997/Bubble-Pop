@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using _01_Scripts.Game.Core;
 using _01_Scripts.Game.Managers;
-using _01_Scripts.Game.Mechanics;
 using DG.Tweening;
 using UnityEngine;
 

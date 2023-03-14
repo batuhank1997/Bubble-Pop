@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using _01_Scripts.Game.Enums;
-using _01_Scripts.Game.Managers;
 using _01_Scripts.Game.Settings;
 using _01_Scripts.Utils;
 using DG.Tweening;
