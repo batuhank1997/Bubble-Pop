@@ -15,13 +15,14 @@ public class ParticleManager : Singleton<ParticleManager>
     public void PlayParticle(ParticleType particleType, Vector3 pos, Quaternion rot, Color color)
     {
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
-        var vfx = Instantiate(particle, pos, rot);
-        
+        var vfx = Lean.Pool.LeanPool.Spawn(particle);
+        vfx.transform.position = pos;
+        vfx.transform.rotation = rot;
         var renderer = vfx.GetComponent<Renderer>();
         renderer.material.color = color;
 
         vfx.GetComponent<Renderer>().material = renderer.material;
-        Destroy(vfx, 1.5f);
+        Lean.Pool.LeanPool.Despawn(vfx, 1f);
     }
     
     public void PlayTextFeedback(ParticleType particleType, Vector3 pos, Quaternion rot, int number)
