@@ -4,6 +4,7 @@
     {
         Destroy,
         TextFeedback,
-        Blast
+        Blast,
+        ComboTextFeedback
     }
 }

@@ -19,3 +19,5 @@ MonoBehaviour:
     particleType: 1
   - prefab: {fileID: 2208231413838215173, guid: b52deff431878cd4283ddb5d826d1db3, type: 3}
     particleType: 2
+  - prefab: {fileID: 8895138647898261715, guid: 098d0b95a7b0cba46b314db49631a681, type: 3}
+    particleType: 3

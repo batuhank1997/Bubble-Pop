@@ -167,12 +167,16 @@ namespace _01_Scripts.Game.Core
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 Item.SpriteColor);
 
+            ComboCounter.IncreaseComboCount(this);
             StartCoroutine(TryMergeAgain());
         }
 
         IEnumerator TryMergeAgain()
         {
             yield return new WaitForSeconds(0.25f);
+            
+            if (!Item)
+                yield return null;
             
             ParticleManager.I.PlayTextFeedback(ParticleType.TextFeedback, transform.position, Quaternion.identity,
                 Item.GetValue());
