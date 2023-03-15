@@ -81,6 +81,11 @@ namespace _01_Scripts.Game.Core
             UpdateNeighbours();
             UpdateName();
         }
+        
+        public void MoveCellUpwards()
+        {
+            Debug.Log("UP!!!!");
+        }
 
         void ResetCell()
         {
@@ -126,7 +131,6 @@ namespace _01_Scripts.Game.Core
 
             ExplodeCell();
             CameraManager.I.CamShake();
-            CellManager.I.TraverseBoard();
             
             ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
                 Item.SpriteColor);
@@ -147,7 +151,6 @@ namespace _01_Scripts.Game.Core
             if (Item)
             {
                 Item.MoveToMerge(cell);;
-                Item = null;
 
                 HasItem = false;
             }
@@ -183,17 +186,16 @@ namespace _01_Scripts.Game.Core
             }
             else if (!_board.TryMergeMatchingCells(this))
             {
-                CellManager.I.TraverseBoard();
                 _board.GetAllCellsDown();
             }
         }
 
-        public void FillWithRandomItem(Item item)
+        public void FillWithItem(Item item)
         {
             Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => _board.TryMergeMatchingCells(this));
+            item.transform.DOLocalMove(Vector3.zero, 0.1f).OnComplete(() => _board.TryMergeMatchingCells(this));
         }
 
         //For Debugging

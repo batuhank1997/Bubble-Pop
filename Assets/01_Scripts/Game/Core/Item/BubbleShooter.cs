@@ -53,13 +53,19 @@ namespace _01_Scripts.Game.Core
 
         private void GetInput()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                trajactory.EnableTrajectory();
-            }
             if (Input.GetMouseButton(0))
             {
                 _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+                if (_shootPos.y < -8.5f)
+                {
+                    Input.GetMouseButtonUp(0);
+                    trajactory.DisableTrajectory();
+                    return;
+                }
+                
+                trajactory.EnableTrajectory();
+
                 var originPos = transform.position;
                 
                 trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
@@ -67,6 +73,9 @@ namespace _01_Scripts.Game.Core
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
                 trajactory.DisableTrajectory();
+                
+                if (_shootPos.y < -8.5f)
+                    return;
                 
                 Shoot();
             }
@@ -76,11 +85,9 @@ namespace _01_Scripts.Game.Core
         {
             Transform bubble = _itemToShoot.transform;
             var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
+            
             _itemToShoot.Shot(shootSpeed, dir);
-
-            bubble.DOMove(dir, shootSpeed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear)
-                .SetLoops(-1, LoopType.Incremental);
-
+            
             ReloadShooter();
         }
 

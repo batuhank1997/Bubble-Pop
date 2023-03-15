@@ -41,15 +41,14 @@ public class ParticleManager : Singleton<ParticleManager>
         vfx.transform.DOMoveY(.75f, 0.35f).SetRelative(true).OnComplete(() =>
         {
             tmp.DOFade(0, 0.2f);
+            Lean.Pool.LeanPool.Despawn(vfx, 1f);
         });
-        
-        Lean.Pool.LeanPool.Despawn(vfx, 1f);
     }
     
     public void PlayComboTextFeedback(ParticleType particleType, int number)
     {
         if (comboTextObj)
-            Destroy(comboTextObj);
+            Lean.Pool.LeanPool.DespawnAll();
 
         var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
         var vfx = Lean.Pool.LeanPool.Spawn(particle);
@@ -66,9 +65,11 @@ public class ParticleManager : Singleton<ParticleManager>
         
         vfx.transform.DOScale(2, 0.4f).OnComplete(() =>
         {
-            tmp.DOFade(0, 0.4f);
+            tmp.DOFade(0, 0.4f).OnComplete(() =>
+            {
+                vfx.transform.localScale = Vector3.zero;
+                Lean.Pool.LeanPool.Despawn(vfx, 1f);
+            });
         });
-        
-        Lean.Pool.LeanPool.Despawn(vfx, 1f);
     }
 }

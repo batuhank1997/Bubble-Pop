@@ -23,8 +23,30 @@ namespace _01_Scripts.Game.Managers
         {
             _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
         }
+
+        [Button]
+        public void MoveCellsUpIfLastRow()
+        {
+            bool hasReached = false;
+
+            for (int i = 0; i < Board.Cols; i++)
+                hasReached = _board.Cells[i, Board.Rows - 1].HasItem;
+            
+            print(_board.Cells[0, Board.Rows - 1].name);
+
+            if (hasReached)
+            {
+                for (int i = 0; i < Board.Rows; i++)
+                {
+                    for (int j = 0; j < Board.Cols; j++)
+                    {
+                        _board.Cells[j, i].MoveCellUpwards();
+                    }
+                }
+            }
+        }
         
-        public int GetRandomNumber()
+        public int GetRandomNumberForItemValue()
         {
             var weights = cellConfig.numberChanceWeights;
             

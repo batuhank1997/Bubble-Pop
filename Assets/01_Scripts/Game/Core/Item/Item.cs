@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01_Scripts.Game.Enums;
@@ -62,7 +63,7 @@ namespace _01_Scripts.Game.Core
         public void PrepareCalculatedItem(int baseNumber,int pow)
         {
             _col.enabled = false;
-            
+
             SetValue(baseNumber, pow);
             SetColor();
             SetText();
@@ -70,17 +71,19 @@ namespace _01_Scripts.Game.Core
 
         public void Shot(float speed, Vector3 dir)
         {
+             rb.velocity = dir * speed;
+            
             _hasFilled = false;
             _speed = speed;
             _dir = dir;
             _col.enabled = true;
-            _col.radius = 0.1f;
+            _col.radius = 0.01f;
             _trailRenderer.enabled = true;
         }
 
         void SetValue()
         {
-            _pow = CellManager.I.GetRandomNumber();
+            _pow = CellManager.I.GetRandomNumberForItemValue();
             _value = (int)Mathf.Pow(2, _pow);
         }
         
@@ -88,7 +91,6 @@ namespace _01_Scripts.Game.Core
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
             _pow = (int)Mathf.Log(total, 2);
-            print(_pow);
 
             if (total > 2048)
                 total = 2048;
@@ -150,7 +152,7 @@ namespace _01_Scripts.Game.Core
 
                 var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.075f;
 
-                cell.transform.DOMove(dir, 0.075f).SetRelative(true).SetLoops(2, LoopType.Yoyo);
+                cell.transform.DOMove(dir, 0.05f).SetRelative(true).SetLoops(2, LoopType.Yoyo);
             }
         }
 
@@ -162,6 +164,8 @@ namespace _01_Scripts.Game.Core
             _hasFilled = true;
             
             DOTween.Kill(transform);
+            rb.velocity = Vector2.zero;
+            
             List<Cell> emptyCells = FindEmptyCells();
 
             var closest = GetClosestCell(emptyCells, transform.position);
@@ -173,13 +177,14 @@ namespace _01_Scripts.Game.Core
         {
             _cell = cell;
             _col.radius = 0.5f;
-            cell.FillWithRandomItem(this);
+            cell.FillWithItem(this);
+            _col.enabled = true;
         }
 
         public void Explode()
         {
             DOTween.Kill(transform);
-            
+
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 SpriteColor);
             
@@ -189,8 +194,9 @@ namespace _01_Scripts.Game.Core
         public void MoveToMerge(Cell targetCell)
         {
             transform.SetParent(targetCell.transform);
-            _valueTMP.DOFade(0, 0.1f);
+            _valueTMP.DOFade(0, 0.25f);
             transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(Explode);
+            CellManager.I.TraverseBoard();
         }
 
         public void Fall()
