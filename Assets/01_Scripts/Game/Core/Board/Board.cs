@@ -97,7 +97,7 @@ namespace _01_Scripts.Game.Core
                 mergeableCell.Merge(lastCell);
             }
             
-            lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), Mathf.Clamp(cells.Count, 0, 9));
+            lastCell.FillWithCalculatedItem(lastCellItem.GetValue(), Mathf.Clamp(cells.Count, 1, 11));
 
             return true;
         }

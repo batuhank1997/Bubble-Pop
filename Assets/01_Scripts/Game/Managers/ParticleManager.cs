@@ -55,6 +55,7 @@ public class ParticleManager : Singleton<ParticleManager>
         var vfx = Lean.Pool.LeanPool.Spawn(particle);
 
         vfx.transform.localScale = Vector3.zero;
+        vfx.transform.position = new Vector2(2.75f, -4.75f);
         
         comboTextObj = vfx;
         
@@ -63,7 +64,7 @@ public class ParticleManager : Singleton<ParticleManager>
         
         tmp.text = "X" + number;
         
-        vfx.transform.DOScale(1, 0.4f).OnComplete(() =>
+        vfx.transform.DOScale(2, 0.4f).OnComplete(() =>
         {
             tmp.DOFade(0, 0.4f);
         });

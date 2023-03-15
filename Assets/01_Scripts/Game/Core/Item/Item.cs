@@ -51,6 +51,7 @@ namespace _01_Scripts.Game.Core
         public void PrepareItem(Cell cell)
         {
             _cell = cell;
+            
             if (!cell)
                 _col.enabled = false;
             
@@ -79,14 +80,15 @@ namespace _01_Scripts.Game.Core
 
         void SetValue()
         {
-            _pow = Random.Range(5, 10);
+            _pow = CellManager.I.GetRandomNumber();
             _value = (int)Mathf.Pow(2, _pow);
         }
         
         void SetValue(int baseNumber, int pow)
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
-            _pow = pow;
+            _pow = (int)Mathf.Log(total, 2);
+            print(_pow);
 
             if (total > 2048)
                 total = 2048;
@@ -104,7 +106,7 @@ namespace _01_Scripts.Game.Core
 
         void SetColor()
         {
-            _spriteRenderer.color = CellManager.I.SetItemColor(_pow - 1);
+            _spriteRenderer.color = CellManager.I.SetItemColor(_pow);
             SpriteColor = _spriteRenderer.color;
             
             _trailRenderer.startColor = SpriteColor;
@@ -116,9 +118,7 @@ namespace _01_Scripts.Game.Core
             if (col.TryGetComponent(out Cell cell) && !_hasFilled)
             {
                 if (cell.HasItem)
-                {
                     FindNearestCellAndFill();
-                }
             }
             if (col.CompareTag(Keys.TAG_EDGE) && !_cell)
             {
@@ -148,7 +148,7 @@ namespace _01_Scripts.Game.Core
                 if (!cell.HasItem)
                     continue;
 
-                var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.15f;
+                var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.075f;
 
                 cell.transform.DOMove(dir, 0.075f).SetRelative(true).SetLoops(2, LoopType.Yoyo);
             }
@@ -198,7 +198,7 @@ namespace _01_Scripts.Game.Core
             rb.gravityScale = 1.5f;
             rb.AddForce(new Vector2(Random.Range(-2.5f, 2.5f), 0), ForceMode2D.Impulse);
         }
-
+        
         List<Cell> FindEmptyCells()
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, 1.5f).ToArray();

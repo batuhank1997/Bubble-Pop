@@ -196,6 +196,7 @@ namespace _01_Scripts.Game.Core
             item.transform.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => _board.TryMergeMatchingCells(this));
         }
 
+        //For Debugging
         [Button]
         void HighLightNeigbours()
         {

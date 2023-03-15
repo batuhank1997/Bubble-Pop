@@ -611,6 +611,7 @@ GameObject:
   - component: {fileID: 549448737}
   - component: {fileID: 549448738}
   - component: {fileID: 549448739}
+  - component: {fileID: 549448740}
   m_Layer: 0
   m_Name: FallItemDestroyer
   m_TagString: Untagged
@@ -670,6 +671,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151dd1dedd66f6249b264d0df06c7f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &549448740
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549448736}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &647147005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,7 +1588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62827c5305684b7aac129ba53e94c3ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorSettings: {fileID: 11400000, guid: 56253a98267f6b14eafffc2e2295f4c7, type: 2}
+  cellConfig: {fileID: 11400000, guid: 56253a98267f6b14eafffc2e2295f4c7, type: 2}
   _board: {fileID: 689201255}
 --- !u!1 &1378404459
 GameObject:
