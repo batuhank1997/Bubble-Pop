@@ -57,29 +57,7 @@ namespace _01_Scripts.Game.Core
                 }
             }
         }
-
-
-        [Button]
-        public void GetAllCellsDown()
-        {
-            for (int i = 0; i < Cells.GetLength(0); i++)
-            {
-                Cell temp = Cells[i, Cells.GetLength(1) - 1];
-                for (int j = Cells.GetLength(1) - 1; j >= 1; j--)
-                {
-                    Cells[i, j] = Cells[i, j - 1];
-                }
-                Cells[i, 0] = temp;
-            }
-            
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Cols; j++)
-                {
-                    Cells[j, i].MoveCellDownwards();
-                }
-            }
-        }
+        
         
         public bool TryMergeMatchingCells(Cell cell)
         {

@@ -135,7 +135,7 @@ namespace _01_Scripts.Game.Core
             ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
                 Item.SpriteColor);
             
-            _board.GetAllCellsDown();
+            CellManager.I.GetAllCellsDown();
         }
 
         public void ExplodeCell()
@@ -181,12 +181,11 @@ namespace _01_Scripts.Game.Core
                 Item.GetValue());
 
             if (Item.GetValue() == 2048)
-            {
                 ExplodeNeighbours();
-            }
+
             else if (!_board.TryMergeMatchingCells(this))
             {
-                _board.GetAllCellsDown();
+                CellManager.I.GetAllCellsDown();
             }
         }
 

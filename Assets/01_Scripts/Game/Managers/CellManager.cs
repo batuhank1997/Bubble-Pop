@@ -23,6 +23,31 @@ namespace _01_Scripts.Game.Managers
         {
             _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
         }
+        
+        [Button]
+        public void GetAllCellsDown()
+        {
+            //move all index by one down
+            
+            for (int i = 0; i < _board.Cells.GetLength(0); i++)
+            {
+                Cell temp = _board.Cells[i, _board.Cells.GetLength(1) - 1];
+                
+                for (int j = _board.Cells.GetLength(1) - 1; j >= 1; j--)
+                {
+                    _board.Cells[i, j] = _board.Cells[i, j - 1];
+                }
+                _board.Cells[i, 0] = temp;
+            }
+            
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Cols; j++)
+                {
+                    _board.Cells[j, i].MoveCellDownwards();
+                }
+            }
+        }
 
         [Button]
         public void MoveCellsUpIfLastRow()
