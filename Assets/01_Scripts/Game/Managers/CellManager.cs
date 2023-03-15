@@ -23,12 +23,25 @@ namespace _01_Scripts.Game.Managers
         {
             _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
         }
+
+        public void CheckCellPositions()
+        {
+            //YOUR CODE HERE...
+            
+            
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Cols; j++)
+                {
+                    _board.Cells[j, i].MoveCellDownwards();
+                }
+            }
+        }
         
         [Button]
-        public void GetAllCellsDown()
+        public void MoveCellsDown()
         {
             //move all index by one down
-            
             for (int i = 0; i < _board.Cells.GetLength(0); i++)
             {
                 Cell temp = _board.Cells[i, _board.Cells.GetLength(1) - 1];
@@ -50,23 +63,25 @@ namespace _01_Scripts.Game.Managers
         }
 
         [Button]
-        public void MoveCellsUpIfLastRow()
+        public void MoveCellsUp()
         {
-            bool hasReached = false;
-
-            for (int i = 0; i < Board.Cols; i++)
-                hasReached = _board.Cells[i, Board.Rows - 1].HasItem;
-            
-            print(_board.Cells[0, Board.Rows - 1].name);
-
-            if (hasReached)
+            for (int i = 0; i < _board.Cells.GetLength(0); i++)
             {
-                for (int i = 0; i < Board.Rows; i++)
+                Cell temp = _board.Cells[i, 0];
+                
+                for (int j = 0; j < _board.Cells.GetLength(1) - 1; j++)
                 {
-                    for (int j = 0; j < Board.Cols; j++)
-                    {
-                        _board.Cells[j, i].MoveCellUpwards();
-                    }
+                    _board.Cells[i, j] = _board.Cells[i, j + 1];
+                }
+                
+                _board.Cells[i, _board.Cells.GetLength(1) - 1] = temp;
+            }
+            
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Cols; j++)
+                {
+                    _board.Cells[j, i].MoveCellUpwards();
                 }
             }
         }

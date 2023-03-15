@@ -28,6 +28,9 @@ namespace _01_Scripts.Game.Core
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
         
+        private Cell upRightNeighbour;
+        private Cell upLeftNeighbour;
+        
         public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
             X = x;
@@ -85,6 +88,30 @@ namespace _01_Scripts.Game.Core
         public void MoveCellUpwards()
         {
             Debug.Log("UP!!!!");
+            
+            Y--;
+
+            if (Y + 1 == 1)
+            {
+                Neighbours.Remove(upLeftNeighbour);
+                Neighbours.Remove(upRightNeighbour);
+            }
+
+            if (Y + 1 == 0)
+            {
+                Y = Board.Rows - 1;
+                
+                ResetCell();
+                transform.DOMoveY((-0.875f * Board.Rows + 1), 0f);
+                HasItem = false;
+            }
+            else
+            {
+                transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true);
+            }
+
+            UpdateNeighbours();
+            UpdateName();
         }
 
         void ResetCell()
@@ -134,8 +161,6 @@ namespace _01_Scripts.Game.Core
             
             ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
                 Item.SpriteColor);
-            
-            CellManager.I.GetAllCellsDown();
         }
 
         public void ExplodeCell()
@@ -183,10 +208,7 @@ namespace _01_Scripts.Game.Core
             if (Item.GetValue() == 2048)
                 ExplodeNeighbours();
 
-            else if (!_board.TryMergeMatchingCells(this))
-            {
-                CellManager.I.GetAllCellsDown();
-            }
+            _board.TryMergeMatchingCells(this);
         }
 
         public void FillWithItem(Item item)
@@ -222,6 +244,8 @@ namespace _01_Scripts.Game.Core
 
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
+            upRightNeighbour = upRightCell;
+            upLeftNeighbour = upLeftCell;
 
             if (lowRightCell && !Neighbours.Contains(lowRightCell)) Neighbours.Add(lowRightCell);
             if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
