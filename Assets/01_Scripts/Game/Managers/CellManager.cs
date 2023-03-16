@@ -23,17 +23,33 @@ namespace _01_Scripts.Game.Managers
         {
             _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
         }
-
+        
+        [Button]
         public void CheckCellPositions()
         {
             //YOUR CODE HERE...
+            var shouldMoveUp = false;
+            var shouldMoveDown = false;
+
+            for (int i = 0; i < Board.Cols; i++)
+            {
+                if (_board.Cells[i, Board.Rows - 1].HasItem)
+                    shouldMoveUp = true;
+                else if (!_board.Cells[i, 5].HasItem)
+                    shouldMoveDown = true;
+            }
             
+            print(Board.Rows - 1);
+            print(_board.Cells[3, Board.Rows - 1].name);
             
             for (int i = 0; i < Board.Rows; i++)
             {
                 for (int j = 0; j < Board.Cols; j++)
                 {
-                    _board.Cells[j, i].MoveCellDownwards();
+                    if (shouldMoveUp)
+                        _board.Cells[j, i].MoveCellUpwards();
+                    else if (shouldMoveDown)
+                        _board.Cells[j, i].MoveCellDownwards();
                 }
             }
         }
