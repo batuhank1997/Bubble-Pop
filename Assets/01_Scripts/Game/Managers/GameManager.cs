@@ -7,7 +7,7 @@ namespace _01_Scripts.Game.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        [SerializeField] private Board _board;
+        [SerializeField] private Board board;
 
         public static Action OnGameFail;
 
@@ -18,7 +18,7 @@ namespace _01_Scripts.Game.Managers
 
         void InitGame()
         {
-            _board.Init();
+            board.Init();
         }
     }
 }

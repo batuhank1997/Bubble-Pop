@@ -5,16 +5,16 @@ using UnityEngine;
 
 public static class ComboCounter
 {
-    private static int comboCount;
+    private static int _comboCount;
     
     public static void IncreaseComboCount(Cell cell)
     {
         cell.StopCoroutine(ResetCounter());
 
-        comboCount++;
+        _comboCount++;
 
-        if (comboCount >= 2)
-            ParticleManager.I.PlayComboTextFeedback(ParticleType.ComboTextFeedback, comboCount);
+        if (_comboCount >= 2)
+            ParticleManager.I.PlayComboTextFeedback(ParticleType.ComboTextFeedback, _comboCount);
 
         cell.StartCoroutine(ResetCounter());
     }
@@ -22,6 +22,6 @@ public static class ComboCounter
     static IEnumerator ResetCounter()
     {
         yield return new WaitForSeconds(2.5f);
-        comboCount = 0;
+        _comboCount = 0;
     } 
 }

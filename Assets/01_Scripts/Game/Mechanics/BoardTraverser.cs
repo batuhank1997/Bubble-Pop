@@ -3,8 +3,8 @@ using _01_Scripts.Game.Core;
 
 public class BoardTraverser
 {
-    HashSet<Cell> allVisitedCells = new HashSet<Cell>();
-    HashSet<Cell> connectedVisitedCells = new HashSet<Cell>();
+    private HashSet<Cell> allVisitedCells = new HashSet<Cell>();
+    private HashSet<Cell> connectedVisitedCells = new HashSet<Cell>();
 
     public void TraverseBoardAndKill(Board board, Cell startingCell)
     {
@@ -33,7 +33,7 @@ public class BoardTraverser
         {
             for (int j = 0; j < Board.Cols; j++)
             {
-                board.Cells[j, i].IsVisited = false;
+                board.Cells[j, i].isVisited = false;
             }
         }
     }
@@ -41,9 +41,9 @@ public class BoardTraverser
     private void DFSAll(Cell startingCell)
     {
         allVisitedCells.Add(startingCell);
-        startingCell.IsVisited = true;
+        startingCell.isVisited = true;
 
-        foreach (Cell neighbor in startingCell.Neighbours)
+        foreach (Cell neighbor in startingCell.neighbours)
         {
             if (!allVisitedCells.Contains(neighbor))
             {
@@ -55,11 +55,11 @@ public class BoardTraverser
     private void DFSConnecteds(Cell startingCell)
     {
         connectedVisitedCells.Add(startingCell);
-        startingCell.IsVisited = true;
+        startingCell.isVisited = true;
 
-        foreach (Cell neighbor in startingCell.Neighbours)
+        foreach (Cell neighbor in startingCell.neighbours)
         {
-            if (!connectedVisitedCells.Contains(neighbor) && neighbor.HasItem)
+            if (!connectedVisitedCells.Contains(neighbor) && neighbor.hasItem)
             {
                 DFSConnecteds(neighbor);
             }
@@ -70,7 +70,7 @@ public class BoardTraverser
     {
         foreach (Cell cell in remainingCells)
         {
-            if (cell.HasItem)
+            if (cell.hasItem)
             {
                 cell.KillItem();
             }

@@ -7,10 +7,6 @@ namespace _01_Scripts.Game.Mechanics
 	{
 		private readonly bool[,] _visitedCells = new bool[Board.Cols, Board.Rows];
 		
-		/// <summary>
-		/// Returns the list of matching cells according to the given match type.
-		/// Returns only the given cell if there are no neighbour items with the given match type.
-		/// </summary>
 		public List<Cell> FindMatches(Cell cell, int value)
 		{
 			var resultCells = new List<Cell>();
@@ -24,17 +20,17 @@ namespace _01_Scripts.Game.Mechanics
 		{
 			if (cell == null) return;
 			
-			var x = cell.X;
-			var y = cell.Y;
+			var x = cell.x;
+			var y = cell.y;
 			
 			if (_visitedCells[x, y]) return;
 
-			if ((cell.HasItem && cell.Item.GetValue() == value))
+			if ((cell.hasItem && cell.item.GetValue() == value))
 			{
 				_visitedCells[x, y] = true;
 				resultCells.Add(cell);
 			
-				var neighbours = cell.Neighbours;
+				var neighbours = cell.neighbours;
 				
 				if (neighbours.Count == 0) return;
 	

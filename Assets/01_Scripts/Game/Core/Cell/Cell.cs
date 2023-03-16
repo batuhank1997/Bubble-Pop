@@ -12,18 +12,18 @@ namespace _01_Scripts.Game.Core
     {
         [SerializeField] private Item itemPrefab;
         [SerializeField] private Transform predictedItem;
-        public List<Cell> Neighbours = new List<Cell>();
-        public bool HasItem;
+        public List<Cell> neighbours = new List<Cell>();
+        public bool hasItem;
 
-        public Item Item;
+        public Item item;
 
-        public int X;
-        public int Y;
+        public int x;
+        public int y;
 
-        public bool IsVisited;
-        public bool IsOffsetLine;
+        public bool isVisited;
+        public bool isOffsetLine;
 
-        private Board _board;
+        private Board board;
 
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
@@ -33,10 +33,10 @@ namespace _01_Scripts.Game.Core
 
         public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
-            X = x;
-            Y = y;
-            IsOffsetLine = hasOffset;
-            _board = board;
+            this.x = x;
+            this.y = y;
+            isOffsetLine = hasOffset;
+            this.board = board;
 
             UpdateNeighbours();
             UpdateName();
@@ -44,40 +44,40 @@ namespace _01_Scripts.Game.Core
             if (y >= Board.RowLimit)
                 return;
 
-            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-            Item.PrepareItem(this);
-            HasItem = true;
+            item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+            item.PrepareItem(this);
+            hasItem = true;
         }
 
         void UpdateName()
         {
-            name = "Cell (X: " + X + " Y: " + Y + ")";
+            name = "Cell (X: " + x + " Y: " + y + ")";
         }
 
         public void MoveCellDownwards()
         {
-            CellManager.I.IsInAction = true;
-            Y++;
+            CellManager.I.isInAction = true;
+            y++;
 
-            if (Y + 1 == Board.Rows)
+            if (y + 1 == Board.Rows)
             {
-                Neighbours.Remove(downLeftNeighbour);
-                Neighbours.Remove(downRightNeighbour);
+                neighbours.Remove(downLeftNeighbour);
+                neighbours.Remove(downRightNeighbour);
             }
 
-            if (Y == Board.Rows)
+            if (y == Board.Rows)
             {
                 ResetCell();
-                Y = 0;
+                y = 0;
                 transform.DOMoveY(0, 0f);
-                Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-                Item.PrepareItem(this);
-                HasItem = true;
+                item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+                item.PrepareItem(this);
+                hasItem = true;
             }
             else
             {
                 transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true)
-                    .OnComplete(() => CellManager.I.IsInAction = false);
+                    .OnComplete(() => CellManager.I.isInAction = false);
             }
 
             UpdateNeighbours();
@@ -86,27 +86,27 @@ namespace _01_Scripts.Game.Core
 
         public void MoveCellUpwards()
         {
-            CellManager.I.IsInAction = true;
-            Y--;
+            CellManager.I.isInAction = true;
+            y--;
 
-            if (Y + 1 == 1 || Y + 1 == 2)
+            if (y + 1 == 1 || y + 1 == 2)
             {
-                Neighbours.Remove(upLeftNeighbour);
-                Neighbours.Remove(upRightNeighbour);
+                neighbours.Remove(upLeftNeighbour);
+                neighbours.Remove(upRightNeighbour);
             }
 
-            if (Y + 1 == 0)
+            if (y + 1 == 0)
             {
-                Y = Board.Rows - 1;
+                y = Board.Rows - 1;
 
                 ResetCell();
                 transform.DOMoveY((-9.625f), 0f);
-                HasItem = false;
+                hasItem = false;
             }
             else
             {
                 transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true)
-                    .OnComplete(() => CellManager.I.IsInAction = false);
+                    .OnComplete(() => CellManager.I.isInAction = false);
             }
 
             UpdateNeighbours();
@@ -115,11 +115,11 @@ namespace _01_Scripts.Game.Core
 
         void ResetCell()
         {
-            if (Item)
-                Destroy(Item.gameObject);
+            if (item)
+                Destroy(item.gameObject);
 
             DOTween.Kill(transform);
-            Neighbours.Clear();
+            neighbours.Clear();
         }
 
         public void PredictItem()
@@ -138,12 +138,12 @@ namespace _01_Scripts.Game.Core
 
         public void KillItem()
         {
-            if (Y == 0)
+            if (y == 0)
                 return;
 
-            var temp = Item;
-            Item = null;
-            HasItem = false;
+            var temp = item;
+            item = null;
+            hasItem = false;
 
             temp.transform.SetParent(null);
             temp.Fall();
@@ -152,44 +152,44 @@ namespace _01_Scripts.Game.Core
         [Button]
         public void ExplodeNeighbours()
         {
-            for (int i = 0; i < Neighbours.Count; i++)
-                Neighbours[i].ExplodeCell();
+            for (int i = 0; i < neighbours.Count; i++)
+                neighbours[i].ExplodeCell();
 
             ExplodeCell();
             CameraManager.I.CamShake();
 
             ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
-                Item.SpriteColor);
+                item.spriteColor);
         }
 
         public void ExplodeCell()
         {
-            if (Item)
-                Item.Explode();
+            if (item)
+                item.Explode();
 
-            HasItem = false;
+            hasItem = false;
         }
 
         public void Merge(Cell cell)
         {
-            if (Item)
+            if (item)
             {
-                Item.MoveToMerge(cell);
+                item.MoveToMerge(cell);
                 ;
 
-                HasItem = false;
+                hasItem = false;
             }
         }
 
         public void FillWithCalculatedItem(int baseNumber, int pow)
         {
-            Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
-            Item.PrepareCalculatedItem(baseNumber, pow);
+            item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+            item.PrepareCalculatedItem(baseNumber, pow);
 
-            HasItem = true;
+            hasItem = true;
 
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
-                Item.SpriteColor);
+                item.spriteColor);
 
             ComboCounter.IncreaseComboCount(this);
             StartCoroutine(TryMergeAgain());
@@ -199,18 +199,18 @@ namespace _01_Scripts.Game.Core
         {
             yield return new WaitForSeconds(0.25f);
 
-            if (!Item)
+            if (!item)
                 yield return null;
 
             ParticleManager.I.PlayTextFeedback(ParticleType.TextFeedback, transform.position, Quaternion.identity,
-                Item.GetValue());
+                item.GetValue());
 
-            if (Item.GetValue() == 2048)
+            if (item.GetValue() == 2048)
                 ExplodeNeighbours();
 
-            if (!_board.TryMergeMatchingCells(this))
+            if (!board.TryMergeMatchingCells(this))
             {
-                CellManager.I.IsInAction = false;
+                CellManager.I.isInAction = false;
                 CellManager.I.CheckCellPositions();
                 CellManager.I.TraverseBoard();
             }
@@ -218,13 +218,13 @@ namespace _01_Scripts.Game.Core
 
         public void FillWithItem(Item item)
         {
-            Item = item;
-            HasItem = true;
+            this.item = item;
+            hasItem = true;
             item.transform.SetParent(transform);
             item.transform.DOLocalMove(Vector3.zero, 0.05f).OnComplete(() =>
             {
-                if (!_board.TryMergeMatchingCells(this))
-                    CellManager.I.IsInAction = false;
+                if (!board.TryMergeMatchingCells(this))
+                    CellManager.I.isInAction = false;
             });
         }
 
@@ -232,7 +232,7 @@ namespace _01_Scripts.Game.Core
         [Button]
         void HighLightNeigbours()
         {
-            foreach (var n in Neighbours)
+            foreach (var n in neighbours)
             {
                 if (!DOTween.IsTweening(n.transform))
                 {
@@ -244,27 +244,27 @@ namespace _01_Scripts.Game.Core
         [Button]
         void UpdateNeighbours()
         {
-            var upRightCell = _board.GetNeighbourWithDirection(this, Direction.UpRight);
-            var upLeftCell = _board.GetNeighbourWithDirection(this, Direction.UpLeft);
-            var lowRightCell = _board.GetNeighbourWithDirection(this, Direction.DownRight);
-            var lowLeftCell = _board.GetNeighbourWithDirection(this, Direction.DownLeft);
-            var rightCell = _board.GetNeighbourWithDirection(this, Direction.Right);
-            var leftCell = _board.GetNeighbourWithDirection(this, Direction.Left);
+            var upRightCell = board.GetNeighbourWithDirection(this, Direction.UpRight);
+            var upLeftCell = board.GetNeighbourWithDirection(this, Direction.UpLeft);
+            var lowRightCell = board.GetNeighbourWithDirection(this, Direction.DownRight);
+            var lowLeftCell = board.GetNeighbourWithDirection(this, Direction.DownLeft);
+            var rightCell = board.GetNeighbourWithDirection(this, Direction.Right);
+            var leftCell = board.GetNeighbourWithDirection(this, Direction.Left);
 
             downLeftNeighbour = lowLeftCell;
             downRightNeighbour = lowRightCell;
             upRightNeighbour = upRightCell;
             upLeftNeighbour = upLeftCell;
 
-            if (lowRightCell && !Neighbours.Contains(lowRightCell)) Neighbours.Add(lowRightCell);
-            if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
-            if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
-            if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
+            if (lowRightCell && !neighbours.Contains(lowRightCell)) neighbours.Add(lowRightCell);
+            if (lowLeftCell && !neighbours.Contains(lowLeftCell)) neighbours.Add(lowLeftCell);
+            if (rightCell && !neighbours.Contains(rightCell)) neighbours.Add(rightCell);
+            if (leftCell && !neighbours.Contains(leftCell)) neighbours.Add(leftCell);
 
-            if (Y == 1)
+            if (y == 1)
                 return;
-            if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);
-            if (upLeftCell && !Neighbours.Contains(upLeftCell)) Neighbours.Add(upLeftCell);
+            if (upRightCell && !neighbours.Contains(upRightCell)) neighbours.Add(upRightCell);
+            if (upLeftCell && !neighbours.Contains(upLeftCell)) neighbours.Add(upLeftCell);
         }
     }
 }

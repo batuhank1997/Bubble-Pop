@@ -52,7 +52,7 @@ namespace _01_Scripts.Game.Core
                 {
                     var rowOffset = i % 2 != 0;
 
-                    if (Cells[j, i].HasItem)
+                    if (Cells[j, i].hasItem)
                         return;
 
                     Cells[j, i].PrepareCell(j, i, this, rowOffset);
@@ -63,12 +63,12 @@ namespace _01_Scripts.Game.Core
         
         public bool TryMergeMatchingCells(Cell cell)
         {
-            var cells = _matchFinder.FindMatches(cell, cell.Item.GetValue());
+            var cells = _matchFinder.FindMatches(cell, cell.item.GetValue());
             
             if (cells.Count < 2) return false;
             
             Cell lastCell = cells[cells.Count - 1];
-            Item lastCellItem = lastCell.Item;
+            Item lastCellItem = lastCell.item;
             
             for (var i = 0; i < cells.Count; i++)
             {
@@ -87,17 +87,17 @@ namespace _01_Scripts.Game.Core
             switch (dir)
             {
                 case Direction.UpRight:
-                    return (cell.Y > 0 && cell.X < Cols) ? Cells[cell.X + ((cell.IsOffsetLine && cell.X + 1 < Cols) ? 1 : 0), cell.Y - 1] : null;
+                    return (cell.y > 0 && cell.x < Cols) ? Cells[cell.x + ((cell.isOffsetLine && cell.x + 1 < Cols) ? 1 : 0), cell.y - 1] : null;
                 case Direction.UpLeft:
-                    return cell.Y > 0 ? Cells[cell.X + ((!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y - 1] : null;
+                    return cell.y > 0 ? Cells[cell.x + ((!cell.isOffsetLine && cell.x > 0) ? -1 : 0), cell.y - 1] : null;
                 case Direction.DownRight:
-                    return ((cell.Y + 1) < Rows && cell.X < Cols) ? Cells[cell.X + ((cell.IsOffsetLine && cell.X + 1 < Cols) ? 1 : 0), cell.Y + 1] : null;
+                    return ((cell.y + 1) < Rows && cell.x < Cols) ? Cells[cell.x + ((cell.isOffsetLine && cell.x + 1 < Cols) ? 1 : 0), cell.y + 1] : null;
                 case Direction.DownLeft:
-                    return (cell.Y + 1 < Rows) ? Cells[cell.X + ( (!cell.IsOffsetLine && cell.X > 0) ? -1 : 0), cell.Y + 1] : null;
+                    return (cell.y + 1 < Rows) ? Cells[cell.x + ( (!cell.isOffsetLine && cell.x > 0) ? -1 : 0), cell.y + 1] : null;
                 case Direction.Right:
-                    return cell.X + 1 < Cols ? Cells[cell.X + 1, cell.Y] : null;
+                    return cell.x + 1 < Cols ? Cells[cell.x + 1, cell.y] : null;
                 case Direction.Left:
-                    return cell.X > 0 ? Cells[cell.X - 1, cell.Y] : null;
+                    return cell.x > 0 ? Cells[cell.x - 1, cell.y] : null;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }

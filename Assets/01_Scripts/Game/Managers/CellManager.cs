@@ -9,11 +9,11 @@ namespace _01_Scripts.Game.Managers
     public class CellManager : Singleton<CellManager>
     {
         [SerializeField] public CellConfig cellConfig;
-        [SerializeField] public Board _board;
+        [SerializeField] public Board board;
 
         private BoardTraverser _boardTraverser = new BoardTraverser();
 
-        public bool IsInAction;
+        public bool isInAction;
 
         public Color SetItemColor(int colorIndex)
         {
@@ -23,22 +23,22 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void TraverseBoard()
         {
-            _boardTraverser.TraverseBoardAndKill(_board, _board.Cells[0, 0]);
+            _boardTraverser.TraverseBoardAndKill(board, board.Cells[0, 0]);
         }
         
         [Button]
         public void CheckCellPositions()
         {
-            if (IsInAction) return;
+            if (isInAction) return;
 
             var shouldMoveUp = false;
             var shouldMoveDown = true;
 
             for (int i = 0; i < Board.Cols; i++)
             {
-                if (_board.Cells[i, Board.ColMaxLimit].HasItem)
+                if (board.Cells[i, Board.ColMaxLimit].hasItem)
                     shouldMoveUp = true;
-                else if (_board.Cells[i, Board.ColMinLimit].HasItem)
+                else if (board.Cells[i, Board.ColMinLimit].hasItem)
                     shouldMoveDown = false;
             }
             
@@ -52,22 +52,22 @@ namespace _01_Scripts.Game.Managers
         public void MoveCellsDown()
         {
             //move all index by one down
-            for (int i = 0; i < _board.Cells.GetLength(0); i++)
+            for (int i = 0; i < board.Cells.GetLength(0); i++)
             {
-                Cell temp = _board.Cells[i, _board.Cells.GetLength(1) - 1];
+                Cell temp = board.Cells[i, board.Cells.GetLength(1) - 1];
                 
-                for (int j = _board.Cells.GetLength(1) - 1; j >= 1; j--)
+                for (int j = board.Cells.GetLength(1) - 1; j >= 1; j--)
                 {
-                    _board.Cells[i, j] = _board.Cells[i, j - 1];
+                    board.Cells[i, j] = board.Cells[i, j - 1];
                 }
-                _board.Cells[i, 0] = temp;
+                board.Cells[i, 0] = temp;
             }
             
             for (int i = 0; i < Board.Rows; i++)
             {
                 for (int j = 0; j < Board.Cols; j++)
                 {
-                    _board.Cells[j, i].MoveCellDownwards();
+                    board.Cells[j, i].MoveCellDownwards();
                 }
             }
         }
@@ -75,23 +75,23 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void MoveCellsUp()
         {
-            for (int i = 0; i < _board.Cells.GetLength(0); i++)
+            for (int i = 0; i < board.Cells.GetLength(0); i++)
             {
-                Cell temp = _board.Cells[i, 0];
+                Cell temp = board.Cells[i, 0];
                 
-                for (int j = 0; j < _board.Cells.GetLength(1) - 1; j++)
+                for (int j = 0; j < board.Cells.GetLength(1) - 1; j++)
                 {
-                    _board.Cells[i, j] = _board.Cells[i, j + 1];
+                    board.Cells[i, j] = board.Cells[i, j + 1];
                 }
                 
-                _board.Cells[i, _board.Cells.GetLength(1) - 1] = temp;
+                board.Cells[i, board.Cells.GetLength(1) - 1] = temp;
             }
             
             for (int i = 0; i < Board.Rows; i++)
             {
                 for (int j = 0; j < Board.Cols; j++)
                 {
-                    _board.Cells[j, i].MoveCellUpwards();
+                    board.Cells[j, i].MoveCellUpwards();
                 }
             }
         }

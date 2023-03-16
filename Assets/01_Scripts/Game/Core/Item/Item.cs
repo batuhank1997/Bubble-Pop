@@ -11,26 +11,25 @@ namespace _01_Scripts.Game.Core
 {
     public class Item : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] private TrailRenderer _trailRenderer;
-        [SerializeField] private TextMeshPro _valueTMP;
-        [SerializeField] private CircleCollider2D _col;
-        [SerializeField] private int _value;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private TrailRenderer trailRenderer;
+        [SerializeField] private TextMeshPro valueTMP;
+        [SerializeField] private CircleCollider2D col;
+        [SerializeField] private int value;
         
-        private Cell _cell;
+        public Color spriteColor;
+        
+        private Cell cell;
         private Rigidbody2D rb;
 
-        private int _pow = 0;
-        private bool _hasFilled = true;
-        private float _speed = 0;
-        private Vector3 _dir;
+        private int pow = 0;
+        private bool hasFilled = true;
+        private float speed = 0;
 
-        public Color SpriteColor;
-        
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
-            _trailRenderer.enabled = false;
+            trailRenderer.enabled = false;
         }
 
         private void Start()
@@ -40,7 +39,7 @@ namespace _01_Scripts.Game.Core
 
         void DoFirstScale()
         {
-            if (!_cell)
+            if (!cell)
                 return;
 
             transform.localScale = Vector3.zero;
@@ -49,10 +48,10 @@ namespace _01_Scripts.Game.Core
 
         public void PrepareItem(Cell cell)
         {
-            _cell = cell;
+            this.cell = cell;
             
             if (!cell)
-                _col.enabled = false;
+                col.enabled = false;
             
             SetValue();
             SetColor();
@@ -60,33 +59,32 @@ namespace _01_Scripts.Game.Core
         }
         public void PrepareCalculatedItem(int baseNumber,int pow)
         {
-            // _col.enabled = false;
-
             SetValue(baseNumber, pow);
             SetColor();
             SetText();
         }
 
-        public void Shot(float speed, Vector3 dir, (Vector2, Vector2) pathPoints)
+        public void Shot(float speed, (Vector2, Vector2) pathPoints)
         {
-            _speed = speed;
+            this.speed = speed;
              MoveSequence(pathPoints);
              
-            _hasFilled = false;
+            hasFilled = false;
             
-            _col.enabled = true;
-            _col.radius = 0.5f;
-            _trailRenderer.enabled = true;
+            col.enabled = true;
+            col.radius = 0.5f;
+            trailRenderer.enabled = true;
         }
 
         void MoveSequence((Vector2, Vector2) pathPoints)
         {
-            var seq = DOTween.Sequence();
-            transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+            CellManager.I.isInAction = true;
+
+            transform.DOMove(pathPoints.Item1, speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
             {
-                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+                transform.DOMove(pathPoints.Item2, speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
                 {
-                    CellManager.I.IsInAction = false;
+                    CellManager.I.isInAction = false;
                     FindNearestCellAndFill();
                 });
             });
@@ -94,45 +92,45 @@ namespace _01_Scripts.Game.Core
         
         void SetValue()
         {
-            _pow = CellManager.I.GetRandomNumberForItemValue();
-            _value = (int)Mathf.Pow(2, _pow);
+            pow = CellManager.I.GetRandomNumberForItemValue();
+            value = (int)Mathf.Pow(2, pow);
         }
         
         void SetValue(int baseNumber, int pow)
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
-            _pow = (int)Mathf.Log(total, 2);
+            this.pow = (int)Mathf.Log(total, 2);
 
             if (total > 2048)
                 total = 2048;
             
-            _value = (int)total;
+            value = (int)total;
         }
         
-        public int GetValue() => _value;
+        public int GetValue() => value;
         public List<Cell> GetEmptyNeighbours() => FindEmptyCells();
         
         void SetText()
         {
-            _valueTMP.text = _value.ToString();
+            valueTMP.text = value.ToString();
         }
 
         void SetColor()
         {
-            _spriteRenderer.color = CellManager.I.SetItemColor(_pow);
-            SpriteColor = _spriteRenderer.color;
+            spriteRenderer.color = CellManager.I.SetItemColor(pow);
+            spriteColor = spriteRenderer.color;
             
-            _trailRenderer.startColor = SpriteColor;
-            _trailRenderer.endColor = new Color(SpriteColor.a, SpriteColor.b, SpriteColor.b, 0);
+            trailRenderer.startColor = spriteColor;
+            trailRenderer.endColor = new Color(spriteColor.a, spriteColor.b, spriteColor.b, 0);
         }
 
         private void PunchNeighbours(Cell targetCell)
         {
-            for (var i = 0; i < targetCell.Neighbours.Count; i++)
+            for (var i = 0; i < targetCell.neighbours.Count; i++)
             {
-                var cell = targetCell.Neighbours[i];
+                var cell = targetCell.neighbours[i];
                 
-                if (!cell.HasItem)
+                if (!cell.hasItem)
                     continue;
 
                 var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.075f;
@@ -143,10 +141,10 @@ namespace _01_Scripts.Game.Core
 
         void FindNearestCellAndFill()
         {
-            if (_hasFilled)
+            if (hasFilled)
                 return;
 
-            _hasFilled = true;
+            hasFilled = true;
             
             DOTween.Kill(transform);
             
@@ -154,7 +152,7 @@ namespace _01_Scripts.Game.Core
 
             var closest = GetClosestCell(emptyCells, transform.position);
             
-            if (closest.Y == Board.ColMaxLimit)
+            if (closest.y == Board.ColMaxLimit)
                 CellManager.I.MoveCellsUp();
             
             PunchNeighbours(closest);
@@ -163,17 +161,17 @@ namespace _01_Scripts.Game.Core
 
         void FillCell(Cell cell)
         {
-            _cell = cell;
-            _col.radius = 0.5f;
+            this.cell = cell;
+            col.radius = 0.5f;
             cell.FillWithItem(this);
-            _col.enabled = true;
+            col.enabled = true;
         }
 
         public void Explode()
         {
             DOTween.Kill(transform);
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
-                SpriteColor);
+                spriteColor);
             
             Destroy(gameObject);
         }
@@ -181,7 +179,7 @@ namespace _01_Scripts.Game.Core
         public void MoveToMerge(Cell targetCell)
         {
             transform.SetParent(targetCell.transform);
-            _valueTMP.DOFade(0, 0.25f);
+            valueTMP.DOFade(0, 0.25f);
             transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(Explode);
             CellManager.I.TraverseBoard();
         }
@@ -202,7 +200,7 @@ namespace _01_Scripts.Game.Core
             {
                 if (col.TryGetComponent(out Cell cell))
                 {
-                    if (cell.HasItem)
+                    if (cell.hasItem)
                         continue;
                     
                     emptyCells.Add(cell);

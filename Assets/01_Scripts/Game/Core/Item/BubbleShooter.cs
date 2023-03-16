@@ -1,3 +1,4 @@
+using _01_Scripts.Game.Core.Trajectory;
 using _01_Scripts.Game.Managers;
 using DG.Tweening;
 using UnityEngine;
@@ -7,13 +8,13 @@ namespace _01_Scripts.Game.Core
     public class BubbleShooter : MonoBehaviour
     {
         [SerializeField] private Item itemPrefab;
-        [SerializeField] private TrajactoryPrediction trajactory;
+        [SerializeField] private TrajectoryPrediction trajectory;
         [SerializeField] private float shootSpeed;
 
 
-        private Item _itemToShoot;
-        private Item _nextItemToShoot;
-        private Vector3 _shootPos = Vector3.zero;
+        private Item itemToShoot;
+        private Item nextItemToShoot;
+        private Vector3 shootPos = Vector3.zero;
 
         private Camera cam;
         private bool canShoot = true;
@@ -55,32 +56,32 @@ namespace _01_Scripts.Game.Core
 
         private void GetInput()
         {
-            if (CellManager.I.IsInAction)
+            if (CellManager.I.isInAction)
                 return;
 
             if (Input.GetMouseButton(0))
             {
-                _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-                if (_shootPos.y < -8.5f)
+                if (shootPos.y < -10f)
                 {
                     Input.GetMouseButtonUp(0);
-                    trajactory.DisableTrajectory();
+                    trajectory.DisableTrajectory();
                     return;
                 }
                 
-                trajactory.EnableTrajectory();
+                trajectory.EnableTrajectory();
 
                 var originPos = transform.position;
                 
-                pathPoints = trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
+                pathPoints = trajectory.Predict(transform.position, (shootPos - originPos).normalized);
                 
             }
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
-                trajactory.DisableTrajectory();
+                trajectory.DisableTrajectory();
                 
-                if (_shootPos.y < -8.5f)
+                if (shootPos.y < -8.5f)
                     return;
                 
                 Shoot();
@@ -89,34 +90,31 @@ namespace _01_Scripts.Game.Core
 
         void Shoot()
         {
-            CellManager.I.IsInAction = true;
-            Transform bubble = _itemToShoot.transform;
-            var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
-            
-            _itemToShoot.Shot(shootSpeed, dir, pathPoints);
+            CellManager.I.isInAction = true;
+            itemToShoot.Shot(shootSpeed, pathPoints);
             
             ReloadShooter();
         }
 
         void LoadItemToShoot()
         {
-            _itemToShoot = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-            _itemToShoot.PrepareItem(null);
+            itemToShoot = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            itemToShoot.PrepareItem(null);
         }
 
         void LoadNextItemToShoot()
         {
-            _nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
-            _nextItemToShoot.PrepareItem(null);
-            DOTween.Kill(_nextItemToShoot);
-            _nextItemToShoot.transform.localScale *= 0.75f;
+            nextItemToShoot = Instantiate(itemPrefab, transform.position + Vector3.left, Quaternion.identity);
+            nextItemToShoot.PrepareItem(null);
+            DOTween.Kill(nextItemToShoot);
+            nextItemToShoot.transform.localScale *= 0.75f;
         }
 
         void ReloadShooter()
         {
-            _itemToShoot = _nextItemToShoot;
-            _itemToShoot.transform.DOScale(1, 0.25f);
-            _itemToShoot.transform.DOMove(transform.position, 0.25f);
+            itemToShoot = nextItemToShoot;
+            itemToShoot.transform.DOScale(1, 0.25f);
+            itemToShoot.transform.DOMove(transform.position, 0.25f);
 
             LoadNextItemToShoot();
         }
