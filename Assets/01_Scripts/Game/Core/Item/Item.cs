@@ -171,7 +171,6 @@ namespace _01_Scripts.Game.Core
             var closest = GetClosestCell(emptyCells, transform.position);
             PunchNeighbours(closest);
             FillCell(closest);
-            CellManager.I.CheckCellPositions();
         }
 
         void FillCell(Cell cell)

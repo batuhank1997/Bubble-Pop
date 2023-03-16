@@ -206,9 +206,8 @@ namespace _01_Scripts.Game.Core
             if (!_board.TryMergeMatchingCells(this))
             {
                 CellManager.I.IsInAction = false;
-                
-                if (Item.GetEmptyNeighbours().Count == 0)
-                    KillItem();
+                CellManager.I.CheckCellPositions();
+                CellManager.I.TraverseBoard();
             }
         }
 
