@@ -153,6 +153,10 @@ namespace _01_Scripts.Game.Core
             List<Cell> emptyCells = FindEmptyCells();
 
             var closest = GetClosestCell(emptyCells, transform.position);
+            
+            if (closest.Y == Board.ColMaxLimit)
+                CellManager.I.MoveCellsUp();
+            
             PunchNeighbours(closest);
             FillCell(closest);
         }

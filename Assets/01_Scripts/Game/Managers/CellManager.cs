@@ -29,17 +29,17 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void CheckCellPositions()
         {
+            if (IsInAction) return;
+
             var shouldMoveUp = false;
             var shouldMoveDown = true;
 
             for (int i = 0; i < Board.Cols; i++)
             {
-                if (_board.Cells[i, Board.Rows - 3].HasItem)
+                if (_board.Cells[i, Board.ColMaxLimit].HasItem)
                     shouldMoveUp = true;
-                else if (_board.Cells[i, 5].HasItem)
-                {
+                else if (_board.Cells[i, Board.ColMinLimit].HasItem)
                     shouldMoveDown = false;
-                }
             }
             
             if (shouldMoveUp)

@@ -27,10 +27,10 @@ namespace _01_Scripts.Game.Core
 
         private Cell downLeftNeighbour;
         private Cell downRightNeighbour;
-        
+
         private Cell upRightNeighbour;
         private Cell upLeftNeighbour;
-        
+
         public void PrepareCell(int x, int y, Board board, bool hasOffset)
         {
             X = x;
@@ -56,6 +56,7 @@ namespace _01_Scripts.Game.Core
 
         public void MoveCellDownwards()
         {
+            CellManager.I.IsInAction = true;
             Y++;
 
             if (Y + 1 == Board.Rows)
@@ -75,15 +76,17 @@ namespace _01_Scripts.Game.Core
             }
             else
             {
-                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
+                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true)
+                    .OnComplete(() => CellManager.I.IsInAction = false);
             }
 
             UpdateNeighbours();
             UpdateName();
         }
-        
+
         public void MoveCellUpwards()
         {
+            CellManager.I.IsInAction = true;
             Y--;
 
             if (Y + 1 == 1 || Y + 1 == 2)
@@ -95,14 +98,15 @@ namespace _01_Scripts.Game.Core
             if (Y + 1 == 0)
             {
                 Y = Board.Rows - 1;
-                
+
                 ResetCell();
-                transform.DOMoveY((-0.875f * Board.Rows + 1), 0f);
+                transform.DOMoveY((-9.625f), 0f);
                 HasItem = false;
             }
             else
             {
-                transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true);
+                transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true)
+                    .OnComplete(() => CellManager.I.IsInAction = false);
             }
 
             UpdateNeighbours();
@@ -117,15 +121,15 @@ namespace _01_Scripts.Game.Core
             DOTween.Kill(transform);
             Neighbours.Clear();
         }
-        
+
         public void PredictItem()
         {
             if (DOTween.IsTweening(predictedItem))
                 return;
-            
+
             predictedItem.DOScale(Vector3.one, 0.2f);
         }
-        
+
         public void StopPredictingItem()
         {
             DOTween.Kill(predictedItem);
@@ -136,7 +140,7 @@ namespace _01_Scripts.Game.Core
         {
             if (Y == 0)
                 return;
-            
+
             var temp = Item;
             Item = null;
             HasItem = false;
@@ -153,7 +157,7 @@ namespace _01_Scripts.Game.Core
 
             ExplodeCell();
             CameraManager.I.CamShake();
-            
+
             ParticleManager.I.PlayParticle(ParticleType.Blast, transform.position, Quaternion.identity,
                 Item.SpriteColor);
         }
@@ -162,7 +166,7 @@ namespace _01_Scripts.Game.Core
         {
             if (Item)
                 Item.Explode();
-            
+
             HasItem = false;
         }
 
@@ -170,7 +174,8 @@ namespace _01_Scripts.Game.Core
         {
             if (Item)
             {
-                Item.MoveToMerge(cell);;
+                Item.MoveToMerge(cell);
+                ;
 
                 HasItem = false;
             }
@@ -182,7 +187,7 @@ namespace _01_Scripts.Game.Core
             Item.PrepareCalculatedItem(baseNumber, pow);
 
             HasItem = true;
-            
+
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 Item.SpriteColor);
 
@@ -193,10 +198,10 @@ namespace _01_Scripts.Game.Core
         IEnumerator TryMergeAgain()
         {
             yield return new WaitForSeconds(0.25f);
-            
+
             if (!Item)
                 yield return null;
-            
+
             ParticleManager.I.PlayTextFeedback(ParticleType.TextFeedback, transform.position, Quaternion.identity,
                 Item.GetValue());
 
@@ -255,7 +260,7 @@ namespace _01_Scripts.Game.Core
             if (lowLeftCell && !Neighbours.Contains(lowLeftCell)) Neighbours.Add(lowLeftCell);
             if (rightCell && !Neighbours.Contains(rightCell)) Neighbours.Add(rightCell);
             if (leftCell && !Neighbours.Contains(leftCell)) Neighbours.Add(leftCell);
-            
+
             if (Y == 1)
                 return;
             if (upRightCell && !Neighbours.Contains(upRightCell)) Neighbours.Add(upRightCell);

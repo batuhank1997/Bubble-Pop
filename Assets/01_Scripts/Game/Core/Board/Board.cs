@@ -15,6 +15,8 @@ namespace _01_Scripts.Game.Core
 
         public const int Rows = 12;
         public const int RowLimit = 4;
+        public const int ColMinLimit = 5;
+        public const int ColMaxLimit = 9;
         public const int Cols = 6;
 
         public Cell[,] Cells = new Cell[Cols, Rows];
