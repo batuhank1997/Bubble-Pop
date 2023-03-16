@@ -171,6 +171,7 @@ namespace _01_Scripts.Game.Core
             var closest = GetClosestCell(emptyCells, transform.position);
             PunchNeighbours(closest);
             FillCell(closest);
+            CellManager.I.CheckCellPositions();
         }
 
         void FillCell(Cell cell)
@@ -184,7 +185,6 @@ namespace _01_Scripts.Game.Core
         public void Explode()
         {
             DOTween.Kill(transform);
-
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
                 SpriteColor);
             

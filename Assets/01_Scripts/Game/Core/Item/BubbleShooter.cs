@@ -53,6 +53,9 @@ namespace _01_Scripts.Game.Core
 
         private void GetInput()
         {
+            if (CellManager.I.IsInAction)
+                return;
+
             if (Input.GetMouseButton(0))
             {
                 _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -83,6 +86,7 @@ namespace _01_Scripts.Game.Core
 
         void Shoot()
         {
+            CellManager.I.IsInAction = true;
             Transform bubble = _itemToShoot.transform;
             var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
             

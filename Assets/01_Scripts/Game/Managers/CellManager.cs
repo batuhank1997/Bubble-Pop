@@ -13,6 +13,8 @@ namespace _01_Scripts.Game.Managers
 
         private BoardTraverser _boardTraverser = new BoardTraverser();
 
+        public bool IsInAction;
+
         public Color SetItemColor(int colorIndex)
         {
            return cellConfig.itemColors[colorIndex];
@@ -27,31 +29,23 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void CheckCellPositions()
         {
-            //YOUR CODE HERE...
             var shouldMoveUp = false;
-            var shouldMoveDown = false;
+            var shouldMoveDown = true;
 
             for (int i = 0; i < Board.Cols; i++)
             {
-                if (_board.Cells[i, Board.Rows - 1].HasItem)
+                if (_board.Cells[i, Board.Rows - 3].HasItem)
                     shouldMoveUp = true;
-                else if (!_board.Cells[i, 5].HasItem)
-                    shouldMoveDown = true;
-            }
-            
-            print(Board.Rows - 1);
-            print(_board.Cells[3, Board.Rows - 1].name);
-            
-            for (int i = 0; i < Board.Rows; i++)
-            {
-                for (int j = 0; j < Board.Cols; j++)
+                else if (_board.Cells[i, 5].HasItem)
                 {
-                    if (shouldMoveUp)
-                        _board.Cells[j, i].MoveCellUpwards();
-                    else if (shouldMoveDown)
-                        _board.Cells[j, i].MoveCellDownwards();
+                    shouldMoveDown = false;
                 }
             }
+            
+            if (shouldMoveUp)
+                MoveCellsUp();
+            else if (shouldMoveDown)
+                MoveCellsDown();
         }
         
         [Button]

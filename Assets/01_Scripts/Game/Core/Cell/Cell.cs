@@ -86,7 +86,7 @@ namespace _01_Scripts.Game.Core
         {
             Y--;
 
-            if (Y + 1 == 1)
+            if (Y + 1 == 1 || Y + 1 == 2)
             {
                 Neighbours.Remove(upLeftNeighbour);
                 Neighbours.Remove(upRightNeighbour);
@@ -203,7 +203,13 @@ namespace _01_Scripts.Game.Core
             if (Item.GetValue() == 2048)
                 ExplodeNeighbours();
 
-            _board.TryMergeMatchingCells(this);
+            if (!_board.TryMergeMatchingCells(this))
+            {
+                CellManager.I.IsInAction = false;
+                
+                if (Item.GetEmptyNeighbours().Count == 0)
+                    KillItem();
+            }
         }
 
         public void FillWithItem(Item item)
@@ -211,7 +217,11 @@ namespace _01_Scripts.Game.Core
             Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero, 0.1f).OnComplete(() => _board.TryMergeMatchingCells(this));
+            item.transform.DOLocalMove(Vector3.zero, 0.1f).OnComplete(() =>
+            {
+                if (!_board.TryMergeMatchingCells(this))
+                    CellManager.I.IsInAction = false;
+            });
         }
 
         //For Debugging
