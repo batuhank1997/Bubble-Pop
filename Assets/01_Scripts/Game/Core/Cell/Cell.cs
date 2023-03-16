@@ -216,7 +216,7 @@ namespace _01_Scripts.Game.Core
             Item = item;
             HasItem = true;
             item.transform.SetParent(transform);
-            item.transform.DOLocalMove(Vector3.zero, 0.1f).OnComplete(() =>
+            item.transform.DOLocalMove(Vector3.zero, 0.05f).OnComplete(() =>
             {
                 if (!_board.TryMergeMatchingCells(this))
                     CellManager.I.IsInAction = false;

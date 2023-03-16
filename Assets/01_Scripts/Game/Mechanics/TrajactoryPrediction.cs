@@ -10,34 +10,35 @@ public class TrajactoryPrediction : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer1;
     [SerializeField] private LineRenderer lineRenderer2;
     
+    [SerializeField] private float castSensitivity;
     private Cell targetCell;
 
-    public void Predict(Vector2 origin, Vector2 dir)
+    public (Vector2, Vector2) Predict(Vector2 origin, Vector2 dir)
     {
         Ray2D ray = new Ray2D(origin, dir);
         
         RaycastHit2D hit = Physics2D.Raycast(origin, dir, distance, rayMask);
-        RaycastHit2D hitCircle = Physics2D.CircleCast(origin, 0.1f, dir, distance, rayMask);
+        RaycastHit2D hitRadius = Physics2D.CircleCast(origin, castSensitivity,dir, distance, rayMask);
         
         Debug.DrawRay(origin, dir * distance, Color.red);
 
         SetLine(lineRenderer1, origin, ray.GetPoint(distance));
 
-        if (PredictItemPlace(hitCircle, lineRenderer1))
+        if (PredictItemPlace(hitRadius, lineRenderer1))
         {
             lineRenderer2.enabled = false;
-            return;
+            return (transform.position, targetCell.transform.position);
         }
         
-        if (hit.collider != null)
+        if (hitRadius.collider != null)
         {
             lineRenderer2.enabled = true;
 
             Vector2 inDirection = dir;
-            Vector2 normal = hit.normal;
+            Vector2 normal = hitRadius.normal;
             Vector2 reflectDirection = Vector2.Reflect(inDirection, normal);
 
-            Ray2D reflectedRay = new Ray2D(hit.point, reflectDirection);
+            Ray2D reflectedRay = new Ray2D(hitRadius.point, reflectDirection);
 
             RaycastHit2D hit2 = Physics2D.Raycast(reflectedRay.origin, reflectedRay.direction, distance, rayMask2);
             
@@ -46,11 +47,13 @@ public class TrajactoryPrediction : MonoBehaviour
             SetLine(lineRenderer2, reflectedRay.origin, reflectedRay.GetPoint(distance));
             
             PredictItemPlace(hit2, lineRenderer2);
+            
+            return (hitRadius.point, targetCell.transform.position);
         }
-        else
-        {
-            lineRenderer2.enabled = false;
-        }
+        
+        lineRenderer2.enabled = false;
+        
+        return (Vector2.zero, Vector2.zero);
     }
 
     Item PredictItemPlace(RaycastHit2D hit, LineRenderer lr)

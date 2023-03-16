@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
-using _01_Scripts.Utils;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -69,18 +67,31 @@ namespace _01_Scripts.Game.Core
             SetText();
         }
 
-        public void Shot(float speed, Vector3 dir)
+        public void Shot(float speed, Vector3 dir, (Vector2, Vector2) pathPoints)
         {
-             rb.velocity = dir * speed;
-            
-            _hasFilled = false;
             _speed = speed;
-            _dir = dir;
+             MoveSequence(pathPoints);
+             
+            _hasFilled = false;
+            
             _col.enabled = true;
-            _col.radius = 0.1f;
+            _col.radius = 0.5f;
             _trailRenderer.enabled = true;
         }
 
+        void MoveSequence((Vector2, Vector2) pathPoints)
+        {
+            var seq = DOTween.Sequence();
+            transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    CellManager.I.IsInAction = false;
+                    FindNearestCellAndFill();
+                });
+            });
+        }
+        
         void SetValue()
         {
             _pow = CellManager.I.GetRandomNumberForItemValue();
@@ -115,32 +126,6 @@ namespace _01_Scripts.Game.Core
             _trailRenderer.endColor = new Color(SpriteColor.a, SpriteColor.b, SpriteColor.b, 0);
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.TryGetComponent(out Cell cell) && !_hasFilled)
-            {
-                if (cell.HasItem)
-                    FindNearestCellAndFill();
-            }
-            if (col.CompareTag(Keys.TAG_EDGE) && !_cell && !_hasFilled)
-            {
-                var touchPoint = col.ClosestPoint(transform.position);
-                BounceFromEdge(touchPoint);
-            }
-        }
-
-        private void BounceFromEdge(Vector2 touchPoint)
-        {
-            DOTween.Kill(transform);
-
-            var normal = ((touchPoint - Vector2.right) - touchPoint).normalized;
-            var bouncedDir = Vector3.Reflect(_dir.normalized, normal);
-            
-            transform.DOMove(bouncedDir, _speed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
-            
-            _dir = bouncedDir;
-        }
-
         private void PunchNeighbours(Cell targetCell)
         {
             for (var i = 0; i < targetCell.Neighbours.Count; i++)
@@ -164,7 +149,6 @@ namespace _01_Scripts.Game.Core
             _hasFilled = true;
             
             DOTween.Kill(transform);
-            rb.velocity = Vector2.zero;
             
             List<Cell> emptyCells = FindEmptyCells();
 

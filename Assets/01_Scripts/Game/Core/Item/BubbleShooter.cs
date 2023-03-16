@@ -18,6 +18,8 @@ namespace _01_Scripts.Game.Core
         private Camera cam;
         private bool canShoot = true;
 
+        private (Vector2, Vector2) pathPoints;
+
         private void Start()
         {
             Subscribe();
@@ -71,7 +73,8 @@ namespace _01_Scripts.Game.Core
 
                 var originPos = transform.position;
                 
-                trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
+                pathPoints = trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
+                
             }
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
@@ -90,7 +93,7 @@ namespace _01_Scripts.Game.Core
             Transform bubble = _itemToShoot.transform;
             var dir = (new Vector3(_shootPos.x, _shootPos.y, 0) - bubble.position).normalized;
             
-            _itemToShoot.Shot(shootSpeed, dir);
+            _itemToShoot.Shot(shootSpeed, dir, pathPoints);
             
             ReloadShooter();
         }
