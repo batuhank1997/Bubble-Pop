@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Mechanics;
@@ -18,7 +19,7 @@ namespace _01_Scripts.Game.Core
         public const int Cols = 6;
 
         public Cell[,] Cells = new Cell[Cols, Rows];
-
+        // public List<List<Cell>> Cells = new List<List<Cell>>();
 
         public void Init()
         {
@@ -37,6 +38,7 @@ namespace _01_Scripts.Game.Core
                     var cell = Instantiate(_cellPrefab, new Vector3(j + rowOffset, -i * 0.875f, 0), Quaternion.identity);
                     
                     Cells[j, i] = cell;
+                    // Cells[j][i] = cell;
                     cell.transform.SetParent(_cellParent);
                 }
             }

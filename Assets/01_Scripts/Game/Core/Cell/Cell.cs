@@ -56,6 +56,8 @@ namespace _01_Scripts.Game.Core
 
         public void MoveCellDownwards()
         {
+            CellManager.I.IsInAction = true;
+            
             Y++;
 
             if (Y + 1 == Board.Rows)
@@ -75,7 +77,8 @@ namespace _01_Scripts.Game.Core
             }
             else
             {
-                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true);
+                transform.DOMove(Vector3.up * -0.875f, 0.35f).SetRelative(true)
+                    .OnComplete(() => CellManager.I.IsInAction = false);
             }
 
             UpdateNeighbours();
@@ -84,7 +87,9 @@ namespace _01_Scripts.Game.Core
         
         public void MoveCellUpwards()
         {
-            Y--;
+            CellManager.I.IsInAction = true;
+
+            /*Y--;
 
             if (Y + 1 == 1 || Y + 1 == 2)
             {
@@ -100,9 +105,10 @@ namespace _01_Scripts.Game.Core
                 transform.DOMoveY((-0.875f * Board.Rows + 1), 0f);
                 HasItem = false;
             }
-            else
+            else*/
             {
-                transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true);
+                transform.DOMove(Vector3.up * 0.875f, 0.35f).SetRelative(true)
+                    .OnComplete(() => CellManager.I.IsInAction = false);
             }
 
             UpdateNeighbours();
@@ -178,6 +184,12 @@ namespace _01_Scripts.Game.Core
 
         public void FillWithCalculatedItem(int baseNumber, int pow)
         {
+            StartCoroutine(DelayMergedItemCreation(baseNumber, pow));
+        }
+
+        IEnumerator DelayMergedItemCreation(int baseNumber, int pow)
+        {
+            yield return new WaitForSeconds(0.15f);
             Item = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
             Item.PrepareCalculatedItem(baseNumber, pow);
 
