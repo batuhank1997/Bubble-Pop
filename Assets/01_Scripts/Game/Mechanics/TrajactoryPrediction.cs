@@ -22,7 +22,7 @@ public class TrajactoryPrediction : MonoBehaviour
 
         SetLine(lineRenderer1, origin, ray.GetPoint(distance));
 
-        if (PredictItemPlace(hit))
+        if (PredictItemPlace(hit, lineRenderer1))
         {
             lineRenderer2.enabled = false;
             return;
@@ -44,7 +44,7 @@ public class TrajactoryPrediction : MonoBehaviour
 
             SetLine(lineRenderer2, reflectedRay.origin, reflectedRay.GetPoint(distance));
             
-            PredictItemPlace(hit2);
+            PredictItemPlace(hit2, lineRenderer2);
         }
         else
         {
@@ -52,12 +52,13 @@ public class TrajactoryPrediction : MonoBehaviour
         }
     }
 
-    Item PredictItemPlace(RaycastHit2D hit)
+    Item PredictItemPlace(RaycastHit2D hit, LineRenderer lr)
     {
         if (hit.collider != null)
         {
             if (hit.collider.TryGetComponent(out Item item))
             {
+                lr.SetPosition(1, hit.point);
                 Cell temp = targetCell;
                 targetCell = item.GetClosestCell(item.GetEmptyNeighbours(), hit.point);
 

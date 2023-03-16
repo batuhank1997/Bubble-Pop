@@ -14,8 +14,8 @@ public class ParticleManager : Singleton<ParticleManager>
     
     public void PlayParticle(ParticleType particleType, Vector3 pos, Quaternion rot, Color color)
     {
-        var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
-        var vfx = Lean.Pool.LeanPool.Spawn(particle);
+        var destroyParticle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
+        var vfx = Lean.Pool.LeanPool.Spawn(destroyParticle);
         
         vfx.transform.position = pos;
         vfx.transform.rotation = rot;
@@ -28,8 +28,8 @@ public class ParticleManager : Singleton<ParticleManager>
     
     public void PlayTextFeedback(ParticleType particleType, Vector3 pos, Quaternion rot, int number)
     {
-        var particle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
-        var vfx = Lean.Pool.LeanPool.Spawn(particle);
+        var textParticle = particleSettings.particles.First(_particle => _particle.particleType == particleType).prefab;
+        var vfx = Lean.Pool.LeanPool.Spawn(textParticle);
 
         var tmp = vfx.GetComponent<TextMeshPro>();
         tmp.DOFade(1, 0f);
@@ -41,7 +41,7 @@ public class ParticleManager : Singleton<ParticleManager>
         vfx.transform.DOMoveY(.75f, 0.35f).SetRelative(true).OnComplete(() =>
         {
             tmp.DOFade(0, 0.2f);
-            Lean.Pool.LeanPool.Despawn(vfx, 1f);
+            Lean.Pool.LeanPool.Despawn(vfx, 0.2f);
         });
     }
     
