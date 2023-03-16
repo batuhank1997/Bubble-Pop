@@ -62,7 +62,7 @@ namespace _01_Scripts.Game.Core
         }
         public void PrepareCalculatedItem(int baseNumber,int pow)
         {
-            _col.enabled = false;
+            // _col.enabled = false;
 
             SetValue(baseNumber, pow);
             SetColor();
@@ -122,7 +122,7 @@ namespace _01_Scripts.Game.Core
                 if (cell.HasItem)
                     FindNearestCellAndFill();
             }
-            if (col.CompareTag(Keys.TAG_EDGE) && !_cell)
+            if (col.CompareTag(Keys.TAG_EDGE) && !_cell && !_hasFilled)
             {
                 var touchPoint = col.ClosestPoint(transform.position);
                 BounceFromEdge(touchPoint);
