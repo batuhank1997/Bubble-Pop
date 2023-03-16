@@ -84,7 +84,11 @@ namespace _01_Scripts.Game.Core
             var seq = DOTween.Sequence();
             transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
             {
-                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(FindNearestCellAndFill);
+                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    CellManager.I.IsInAction = false;
+                    FindNearestCellAndFill();
+                });
             });
         }
         
@@ -149,10 +153,6 @@ namespace _01_Scripts.Game.Core
             List<Cell> emptyCells = FindEmptyCells();
 
             var closest = GetClosestCell(emptyCells, transform.position);
-            
-            if (closest.Y == Board.Rows - 3)
-                CellManager.I.MoveCellsUp();
-
             PunchNeighbours(closest);
             FillCell(closest);
         }
@@ -177,8 +177,8 @@ namespace _01_Scripts.Game.Core
         public void MoveToMerge(Cell targetCell)
         {
             transform.SetParent(targetCell.transform);
-            transform.DOLocalMove(Vector3.zero, 0.2f).OnComplete(Explode);
-            _valueTMP.DOFade(0, 0.2f);
+            _valueTMP.DOFade(0, 0.25f);
+            transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(Explode);
             CellManager.I.TraverseBoard();
         }
 

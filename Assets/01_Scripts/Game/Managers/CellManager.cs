@@ -1,7 +1,6 @@
 ﻿using _01_Scripts.Game.Core;
 using _01_Scripts.Game.Settings;
 using _01_Scripts.Utils;
-using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -30,9 +29,6 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void CheckCellPositions()
         {
-            if (IsInAction)
-                return;
-
             var shouldMoveUp = false;
             var shouldMoveDown = true;
 
@@ -79,7 +75,7 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void MoveCellsUp()
         {
-            /*for (int i = 0; i < _board.Cells.GetLength(0); i++)
+            for (int i = 0; i < _board.Cells.GetLength(0); i++)
             {
                 Cell temp = _board.Cells[i, 0];
                 
@@ -89,7 +85,7 @@ namespace _01_Scripts.Game.Managers
                 }
                 
                 _board.Cells[i, _board.Cells.GetLength(1) - 1] = temp;
-            }*/
+            }
             
             for (int i = 0; i < Board.Rows; i++)
             {
