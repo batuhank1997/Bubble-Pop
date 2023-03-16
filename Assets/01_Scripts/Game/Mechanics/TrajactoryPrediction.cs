@@ -17,12 +17,13 @@ public class TrajactoryPrediction : MonoBehaviour
         Ray2D ray = new Ray2D(origin, dir);
         
         RaycastHit2D hit = Physics2D.Raycast(origin, dir, distance, rayMask);
+        RaycastHit2D hitCircle = Physics2D.CircleCast(origin, 0.1f, dir, distance, rayMask);
         
         Debug.DrawRay(origin, dir * distance, Color.red);
 
         SetLine(lineRenderer1, origin, ray.GetPoint(distance));
 
-        if (PredictItemPlace(hit, lineRenderer1))
+        if (PredictItemPlace(hitCircle, lineRenderer1))
         {
             lineRenderer2.enabled = false;
             return;

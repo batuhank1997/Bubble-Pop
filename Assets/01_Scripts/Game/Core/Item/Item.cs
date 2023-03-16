@@ -77,7 +77,7 @@ namespace _01_Scripts.Game.Core
             _speed = speed;
             _dir = dir;
             _col.enabled = true;
-            _col.radius = 0.01f;
+            _col.radius = 0.1f;
             _trailRenderer.enabled = true;
         }
 
