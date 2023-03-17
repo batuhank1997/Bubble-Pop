@@ -118,7 +118,7 @@ namespace _01_Scripts.Game.Core
         void SetValue(int baseNumber, int pow)
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
-            _pow = (int)Mathf.Log(total, 2);
+            _pow = Mathf.Clamp((int)Mathf.Log(total, 2), 1, 11);
 
             if (total > 2048)
                 total = 2048;
@@ -136,6 +136,8 @@ namespace _01_Scripts.Game.Core
 
         void SetColor()
         {
+            
+            print(_pow);
             _spriteRenderer.color = CellManager.I.SetItemColor(_pow);
             SpriteColor = _spriteRenderer.color;
             
