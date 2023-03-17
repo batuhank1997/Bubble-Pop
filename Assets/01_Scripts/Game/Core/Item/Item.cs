@@ -69,16 +69,32 @@ namespace _01_Scripts.Game.Core
             SetText();
         }
 
-        public void Shot(float speed, Vector3 dir)
+        public void Shot(float speed, Vector3 dir, (Cell, Vector2, Vector2) trajectoryData)
         {
-             rb.velocity = dir * speed;
-            
             _hasFilled = false;
+            
             _speed = speed;
             _dir = dir;
+Debug.Log(trajectoryData.Item1);
+
+            if (!trajectoryData.Item1)
+                PhysicsMovement();
+            else
+                TweenMovement();
+            
             _col.enabled = true;
             _col.radius = 0.1f;
             _trailRenderer.enabled = true;
+        }
+
+        void PhysicsMovement()
+        {
+            rb.velocity = _dir * _speed;
+        }
+
+        void TweenMovement()
+        {
+            
         }
 
         void SetValue()

@@ -12,7 +12,7 @@ public class TrajactoryPrediction : MonoBehaviour
     
     private Cell targetCell;
 
-    public void Predict(Vector2 origin, Vector2 dir)
+    public (Cell, Vector2, Vector2) Predict(Vector2 origin, Vector2 dir)
     {
         Ray2D ray = new Ray2D(origin, dir);
         
@@ -26,7 +26,7 @@ public class TrajactoryPrediction : MonoBehaviour
         if (PredictItemPlace(hitCircle, lineRenderer1))
         {
             lineRenderer2.enabled = false;
-            return;
+            return (targetCell, transform.position, lineRenderer1.GetPosition(1));
         }
         
         if (hit.collider != null)
@@ -51,6 +51,8 @@ public class TrajactoryPrediction : MonoBehaviour
         {
             lineRenderer2.enabled = false;
         }
+
+        return (targetCell, Vector2.zero, Vector2.zero);
     }
 
     Item PredictItemPlace(RaycastHit2D hit, LineRenderer lr)
@@ -62,7 +64,7 @@ public class TrajactoryPrediction : MonoBehaviour
                 lr.SetPosition(1, hit.point);
                 Cell temp = targetCell;
                 targetCell = item.GetClosestCell(item.GetEmptyNeighbours(), hit.point);
-
+                
                 if (targetCell)
                     targetCell.PredictItem();
 
@@ -71,8 +73,13 @@ public class TrajactoryPrediction : MonoBehaviour
                 
                 return item;
             }
+
+            if (targetCell)
+            {
+                targetCell.StopPredictingItem();
+                targetCell = null;
+            }
         }
-        
 
         return null;
     }
