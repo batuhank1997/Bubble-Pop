@@ -62,7 +62,7 @@ namespace _01_Scripts.Game.Core
             {
                 _shootPos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-                if (_shootPos.y < -8.5f)
+                if (_shootPos.y < -10f)
                 {
                     Input.GetMouseButtonUp(0);
                     trajactory.DisableTrajectory();
@@ -75,13 +75,12 @@ namespace _01_Scripts.Game.Core
                 
                 trajectoryData = trajactory.Predict(transform.position, (_shootPos - originPos).normalized);
                 
-                Debug.Log(trajectoryData);
             }
             if (Input.GetMouseButtonUp(0) && canShoot)
             {
                 trajactory.DisableTrajectory();
                 
-                if (_shootPos.y < -8.5f)
+                if (_shootPos.y < -10f)
                     return;
                 
                 Shoot();

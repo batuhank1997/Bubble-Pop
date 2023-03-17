@@ -45,12 +45,21 @@ public class TrajactoryPrediction : MonoBehaviour
 
             SetLine(lineRenderer2, reflectedRay.origin, reflectedRay.GetPoint(distance));
             
-            PredictItemPlace(hit2, lineRenderer2);
+            var item  =PredictItemPlace(hit2, lineRenderer2);
+
+            if (!item)
+            {
+                if (targetCell)
+                {
+                    targetCell.StopPredictingItem();
+                    targetCell = null;
+                }
+            }
+            
+            return (targetCell, lineRenderer2.GetPosition(0), lineRenderer2.GetPosition(1));
         }
-        else
-        {
-            lineRenderer2.enabled = false;
-        }
+        
+        lineRenderer2.enabled = false;
 
         return (targetCell, Vector2.zero, Vector2.zero);
     }
@@ -72,12 +81,6 @@ public class TrajactoryPrediction : MonoBehaviour
                     temp.StopPredictingItem();
                 
                 return item;
-            }
-
-            if (targetCell)
-            {
-                targetCell.StopPredictingItem();
-                targetCell = null;
             }
         }
 

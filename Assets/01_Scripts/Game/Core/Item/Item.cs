@@ -62,8 +62,6 @@ namespace _01_Scripts.Game.Core
         }
         public void PrepareCalculatedItem(int baseNumber,int pow)
         {
-            // _col.enabled = false;
-
             SetValue(baseNumber, pow);
             SetColor();
             SetText();
@@ -75,26 +73,40 @@ namespace _01_Scripts.Game.Core
             
             _speed = speed;
             _dir = dir;
-Debug.Log(trajectoryData.Item1);
 
             if (!trajectoryData.Item1)
                 PhysicsMovement();
             else
-                TweenMovement();
+                TweenMovement((trajectoryData.Item2, trajectoryData.Item3));
             
-            _col.enabled = true;
-            _col.radius = 0.1f;
             _trailRenderer.enabled = true;
         }
 
         void PhysicsMovement()
         {
+            Debug.Log("PHYSICS");
+            _col.radius = 0.25f;
+            _col.enabled = true;
+
             rb.velocity = _dir * _speed;
         }
 
-        void TweenMovement()
+        void TweenMovement((Vector2, Vector2) pathPoints)
         {
+            Debug.Log("TWEEN");
+
+            _col.enabled = false;
             
+            transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    CellManager.I.IsInAction = false;
+                    _col.enabled = true;
+                    
+                    FindNearestCellAndFill();
+                });
+            });
         }
 
         void SetValue()
