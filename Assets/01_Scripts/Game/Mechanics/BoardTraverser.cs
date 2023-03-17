@@ -43,7 +43,7 @@ public class BoardTraverser
         allVisitedCells.Add(startingCell);
         startingCell.isVisited = true;
 
-        foreach (Cell neighbor in startingCell.neighbours)
+        foreach (Cell neighbor in startingCell.Neighbours)
         {
             if (!allVisitedCells.Contains(neighbor))
             {
@@ -57,9 +57,9 @@ public class BoardTraverser
         connectedVisitedCells.Add(startingCell);
         startingCell.isVisited = true;
 
-        foreach (Cell neighbor in startingCell.neighbours)
+        foreach (Cell neighbor in startingCell.Neighbours)
         {
-            if (!connectedVisitedCells.Contains(neighbor) && neighbor.hasItem)
+            if (!connectedVisitedCells.Contains(neighbor) && neighbor.HasItem)
             {
                 DFSConnecteds(neighbor);
             }
@@ -70,7 +70,7 @@ public class BoardTraverser
     {
         foreach (Cell cell in remainingCells)
         {
-            if (cell.hasItem)
+            if (cell.HasItem)
             {
                 cell.KillItem();
             }

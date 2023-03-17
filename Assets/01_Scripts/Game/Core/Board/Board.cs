@@ -52,7 +52,7 @@ namespace _01_Scripts.Game.Core
                 {
                     var rowOffset = i % 2 != 0;
 
-                    if (Cells[j, i].hasItem)
+                    if (Cells[j, i].HasItem)
                         return;
 
                     Cells[j, i].PrepareCell(j, i, this, rowOffset);

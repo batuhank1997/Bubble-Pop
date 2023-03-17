@@ -300,12 +300,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f3d7c6e8432144fa2ff72af10b8c87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 311853531220679633}
-  trailRenderer: {fileID: 6493966242499761037}
-  valueTMP: {fileID: 311853531232976566}
-  col: {fileID: 2446305597302597464}
-  value: 0
-  spriteColor: {r: 0, g: 0, b: 0, a: 1}
+  _spriteRenderer: {fileID: 311853531220679633}
+  _trailRenderer: {fileID: 6493966242499761037}
+  _valueTMP: {fileID: 311853531232976566}
+  _col: {fileID: 2446305597302597464}
+  _value: 0
+  SpriteColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!58 &2446305597302597464
 CircleCollider2D:
   m_ObjectHideFlags: 0

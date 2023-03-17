@@ -13,7 +13,7 @@ namespace _01_Scripts.Game.Managers
 
         private BoardTraverser _boardTraverser = new BoardTraverser();
 
-        public bool isInAction;
+        public bool IsInAction;
 
         public Color SetItemColor(int colorIndex)
         {
@@ -29,16 +29,16 @@ namespace _01_Scripts.Game.Managers
         [Button]
         public void CheckCellPositions()
         {
-            if (isInAction) return;
+            if (IsInAction) return;
 
             var shouldMoveUp = false;
             var shouldMoveDown = true;
 
             for (int i = 0; i < Board.Cols; i++)
             {
-                if (board.Cells[i, Board.ColMaxLimit].hasItem)
+                if (board.Cells[i, Board.ColMaxLimit].HasItem)
                     shouldMoveUp = true;
-                else if (board.Cells[i, Board.ColMinLimit].hasItem)
+                else if (board.Cells[i, Board.ColMinLimit].HasItem)
                     shouldMoveDown = false;
             }
             

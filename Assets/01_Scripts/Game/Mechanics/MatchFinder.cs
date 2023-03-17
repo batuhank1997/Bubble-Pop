@@ -25,12 +25,12 @@ namespace _01_Scripts.Game.Mechanics
 			
 			if (_visitedCells[x, y]) return;
 
-			if ((cell.hasItem && cell.item.GetValue() == value))
+			if ((cell.HasItem && cell.item.GetValue() == value))
 			{
 				_visitedCells[x, y] = true;
 				resultCells.Add(cell);
 			
-				var neighbours = cell.neighbours;
+				var neighbours = cell.Neighbours;
 				
 				if (neighbours.Count == 0) return;
 	
