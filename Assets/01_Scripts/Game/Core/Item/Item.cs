@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01_Scripts.Game.Enums;
 using _01_Scripts.Game.Managers;
+using _01_Scripts.Utils;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -11,25 +13,26 @@ namespace _01_Scripts.Game.Core
 {
     public class Item : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private TrailRenderer trailRenderer;
-        [SerializeField] private TextMeshPro valueTMP;
-        [SerializeField] private CircleCollider2D col;
-        [SerializeField] private int value;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private TrailRenderer _trailRenderer;
+        [SerializeField] private TextMeshPro _valueTMP;
+        [SerializeField] private CircleCollider2D _col;
+        [SerializeField] private int _value;
         
-        public Color spriteColor;
-        
-        private Cell cell;
+        private Cell _cell;
         private Rigidbody2D rb;
 
-        private int pow = 0;
-        private bool hasFilled = true;
-        private float speed = 0;
+        private int _pow = 0;
+        private bool _hasFilled = true;
+        private float _speed = 0;
+        private Vector3 _dir;
 
+        public Color SpriteColor;
+        
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
-            trailRenderer.enabled = false;
+            _trailRenderer.enabled = false;
         }
 
         private void Start()
@@ -39,7 +42,7 @@ namespace _01_Scripts.Game.Core
 
         void DoFirstScale()
         {
-            if (!cell)
+            if (!_cell)
                 return;
 
             transform.localScale = Vector3.zero;
@@ -48,10 +51,10 @@ namespace _01_Scripts.Game.Core
 
         public void PrepareItem(Cell cell)
         {
-            this.cell = cell;
+            _cell = cell;
             
             if (!cell)
-                col.enabled = false;
+                _col.enabled = false;
             
             SetValue();
             SetColor();
@@ -64,73 +67,115 @@ namespace _01_Scripts.Game.Core
             SetText();
         }
 
-        public void Shot(float speed, (Vector2, Vector2) pathPoints)
+        public void Shot(float speed, Vector3 dir, (Cell, Vector2, Vector2) trajectoryData)
         {
-            this.speed = speed;
-             MoveSequence(pathPoints);
-             
-            hasFilled = false;
+            _hasFilled = false;
             
-            col.enabled = true;
-            col.radius = 0.5f;
-            trailRenderer.enabled = true;
+            _speed = speed;
+            _dir = dir;
+
+            if (!trajectoryData.Item1)
+                PhysicsMovement();
+            else
+                TweenMovement((trajectoryData.Item2, trajectoryData.Item3));
+            
+            _trailRenderer.enabled = true;
         }
 
-        void MoveSequence((Vector2, Vector2) pathPoints)
+        void PhysicsMovement()
         {
-            CellManager.I.isInAction = true;
+            Debug.Log("PHYSICS");
+            _col.radius = 0.25f;
+            _col.enabled = true;
 
-            transform.DOMove(pathPoints.Item1, speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+            rb.velocity = _dir * _speed;
+        }
+
+        void TweenMovement((Vector2, Vector2) pathPoints)
+        {
+            Debug.Log("TWEEN");
+
+            _col.enabled = false;
+            
+            transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
             {
-                transform.DOMove(pathPoints.Item2, speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
+                transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
                 {
-                    CellManager.I.isInAction = false;
+                    CellManager.I.IsInAction = false;
+                    _col.enabled = true;
+                    
                     FindNearestCellAndFill();
                 });
             });
         }
-        
+
         void SetValue()
         {
-            pow = CellManager.I.GetRandomNumberForItemValue();
-            value = (int)Mathf.Pow(2, pow);
+            _pow = CellManager.I.GetRandomNumberForItemValue();
+            _value = (int)Mathf.Pow(2, _pow);
         }
         
         void SetValue(int baseNumber, int pow)
         {
             var total = baseNumber * Mathf.Pow(2, pow - 1);
-            this.pow = (int)Mathf.Log(total, 2);
+            _pow = (int)Mathf.Log(total, 2);
 
             if (total > 2048)
                 total = 2048;
             
-            value = (int)total;
+            _value = (int)total;
         }
         
-        public int GetValue() => value;
+        public int GetValue() => _value;
         public List<Cell> GetEmptyNeighbours() => FindEmptyCells();
         
         void SetText()
         {
-            valueTMP.text = value.ToString();
+            _valueTMP.text = _value.ToString();
         }
 
         void SetColor()
         {
-            spriteRenderer.color = CellManager.I.SetItemColor(pow);
-            spriteColor = spriteRenderer.color;
+            _spriteRenderer.color = CellManager.I.SetItemColor(_pow);
+            SpriteColor = _spriteRenderer.color;
             
-            trailRenderer.startColor = spriteColor;
-            trailRenderer.endColor = new Color(spriteColor.a, spriteColor.b, spriteColor.b, 0);
+            _trailRenderer.startColor = SpriteColor;
+            _trailRenderer.endColor = new Color(SpriteColor.a, SpriteColor.b, SpriteColor.b, 0);
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.TryGetComponent(out Cell cell) && !_hasFilled)
+            {
+                if (cell.HasItem)
+                    FindNearestCellAndFill();
+            }
+            if (col.CompareTag(Keys.TAG_EDGE) && !_cell && !_hasFilled)
+            {
+                var touchPoint = col.ClosestPoint(transform.position);
+                BounceFromEdge(touchPoint);
+            }
+        }
+
+        private void BounceFromEdge(Vector2 touchPoint)
+        {
+            DOTween.Kill(transform);
+
+            var normal = ((touchPoint - Vector2.right) - touchPoint).normalized;
+            var bouncedDir = Vector3.Reflect(_dir.normalized, normal);
+            
+            transform.DOMove(bouncedDir, _speed).SetSpeedBased(true).SetRelative(true).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+            
+            _dir = bouncedDir;
         }
 
         private void PunchNeighbours(Cell targetCell)
         {
-            for (var i = 0; i < targetCell.neighbours.Count; i++)
+            for (var i = 0; i < targetCell.Neighbours.Count; i++)
             {
-                var cell = targetCell.neighbours[i];
+                var cell = targetCell.Neighbours[i];
                 
-                if (!cell.hasItem)
+                if (!cell.HasItem)
                     continue;
 
                 var dir = (cell.transform.position - targetCell.transform.position).normalized * 0.075f;
@@ -141,37 +186,34 @@ namespace _01_Scripts.Game.Core
 
         void FindNearestCellAndFill()
         {
-            if (hasFilled)
+            if (_hasFilled)
                 return;
 
-            hasFilled = true;
+            _hasFilled = true;
             
             DOTween.Kill(transform);
+            rb.velocity = Vector2.zero;
             
             List<Cell> emptyCells = FindEmptyCells();
 
             var closest = GetClosestCell(emptyCells, transform.position);
-            
-            if (closest.y == Board.ColMaxLimit)
-                CellManager.I.MoveCellsUp();
-            
             PunchNeighbours(closest);
             FillCell(closest);
         }
 
         void FillCell(Cell cell)
         {
-            this.cell = cell;
-            col.radius = 0.5f;
+            _cell = cell;
+            _col.radius = 0.5f;
             cell.FillWithItem(this);
-            col.enabled = true;
+            _col.enabled = true;
         }
 
         public void Explode()
         {
             DOTween.Kill(transform);
             ParticleManager.I.PlayParticle(ParticleType.Destroy, transform.position, Quaternion.identity,
-                spriteColor);
+                SpriteColor);
             
             Destroy(gameObject);
         }
@@ -179,7 +221,7 @@ namespace _01_Scripts.Game.Core
         public void MoveToMerge(Cell targetCell)
         {
             transform.SetParent(targetCell.transform);
-            valueTMP.DOFade(0, 0.25f);
+            _valueTMP.DOFade(0, 0.25f);
             transform.DOLocalMove(Vector3.zero, 0.15f).OnComplete(Explode);
             CellManager.I.TraverseBoard();
         }
@@ -200,7 +242,7 @@ namespace _01_Scripts.Game.Core
             {
                 if (col.TryGetComponent(out Cell cell))
                 {
-                    if (cell.hasItem)
+                    if (cell.HasItem)
                         continue;
                     
                     emptyCells.Add(cell);
