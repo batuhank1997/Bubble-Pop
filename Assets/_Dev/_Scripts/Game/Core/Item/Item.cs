@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _01_Scripts.Game.Core;
@@ -119,8 +120,16 @@ namespace _Dev_Scripts.Game.Core
                 total = 2048;
             
             _value = (int)total;
+            
+            StartCoroutine(IncreaseScoreRoutine());
         }
-        
+
+        IEnumerator IncreaseScoreRoutine()
+        {
+            yield return new WaitForSeconds(0.25f);
+            ScoreManager.I.IncreaseScore(_value);
+        }
+
         public int GetValue() => _value;
         public List<Cell> GetEmptyNeighbours() => FindEmptyCells();
         
