@@ -84,7 +84,6 @@ namespace _Dev_Scripts.Game.Core
 
         void PhysicsMovement()
         {
-            Debug.Log("PHYSICS");
             _col.radius = 0.25f;
             _col.enabled = true;
 
@@ -93,17 +92,13 @@ namespace _Dev_Scripts.Game.Core
 
         void TweenMovement((Vector2, Vector2) pathPoints)
         {
-            Debug.Log("TWEEN");
-
             _col.enabled = false;
             
             transform.DOMove(pathPoints.Item1, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
             {
                 transform.DOMove(pathPoints.Item2, _speed).SetSpeedBased(true).SetEase(Ease.Linear).OnComplete(() =>
                 {
-                    CellManager.I.IsInAction = false;
                     _col.enabled = true;
-                    
                     FindNearestCellAndFill();
                 });
             });
@@ -136,8 +131,6 @@ namespace _Dev_Scripts.Game.Core
 
         void SetColor()
         {
-            
-            print(_pow);
             _spriteRenderer.color = CellManager.I.SetItemColor(_pow);
             SpriteColor = _spriteRenderer.color;
             

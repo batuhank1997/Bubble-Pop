@@ -227,6 +227,8 @@ namespace _01_Scripts.Game.Core
             {
                 if (!board.TryMergeMatchingCells(this))
                     CellManager.I.IsInAction = false;
+                else
+                    CellManager.I.IsInAction = true;
             });
         }
 
